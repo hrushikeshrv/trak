@@ -24,10 +24,17 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         justifyContent: 'center',
     },
+    jcc: {
+        justifyContent: 'center'
+    },
     centeredRow: {
         flexDirection: 'row',
         alignItems: 'center',
         justifyContent: 'center'
+    },
+    row: {
+        flexDirection: 'row',
+        width: '100%',
     },
     screenContainer: {
         backgroundColor: constants.background,
@@ -53,6 +60,15 @@ const styles = StyleSheet.create({
     },
     marginTop: {
         marginTop: 20
+    },
+    marginTopDouble: {
+        marginTop: 50
+    },
+    bold: {
+        fontWeight: 'bold'
+    },
+    small: {
+        fontSize: 13,
     },
     textInput: {
         borderBottomColor: constants.primaryDark1,

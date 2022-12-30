@@ -53,7 +53,7 @@ class TrackerList extends React.Component {
                 <UpdateTrackerList onUpdate={this.updateTrackerList}></UpdateTrackerList>
                 <View style={[styles.centeredRow]}>
                     <Pressable
-                        onPress={() => {navigation.navigate('NewTracker')}}
+                        onPress={() => {navigation.navigate('AddRecord')}}
                         style={styles.button}
                     >
                         <View style={styles.centeredRow}>
