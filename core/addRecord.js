@@ -6,6 +6,8 @@ import { useNavigation } from '@react-navigation/native';
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import DateTimePicker from "react-native-modal-datetime-picker";
 
+import { formatDate } from "./utils";
+
 
 class AddRecord extends React.Component {
     state = {
@@ -28,13 +30,6 @@ class AddRecord extends React.Component {
 
     setDate = date => {
         this.setState({date: date})
-    }
-
-    formatDate = date => {
-        if (typeof date === 'string') return date;
-        const words = date.toString().split(' ');
-        let time = words[4].split(':');
-        return `${time[0]}:${time[1]} on ${words[0]}, ${words[1]} ${words[2]} ${words[3]}`
     }
 
     saveRecord = () => {
@@ -103,7 +98,7 @@ class AddRecord extends React.Component {
                             onPress={this.toggleDatePicker}
                             style={[styles.button, styles.ajc, styles.marginTopDouble]}
                         >
-                            <Text style={styles.bold}>{this.formatDate(this.state.date)}</Text>
+                            <Text style={styles.bold}>{formatDate(this.state.date)}</Text>
                         </Pressable>
                         <Pressable
                             style={[styles.button, styles.ajc, styles.marginTopDouble]}

@@ -12,6 +12,12 @@ export const constants = {
     primaryColor: '#F44336',
     primaryDark1: '#E53935',
     primaryDark2: '#D32F2F',
+
+    errorLight2: '#E57373',
+    errorLight1: '#EF5350',
+    errorColor: '#F44336',
+    errorDark1: '#E53935',
+    errorDark2: '#D32F2F',
 }
 
 const styles = StyleSheet.create({
@@ -26,6 +32,9 @@ const styles = StyleSheet.create({
     },
     jcc: {
         justifyContent: 'center'
+    },
+    jcsb: {
+        justifyContent: 'space-between',
     },
     centeredRow: {
         flexDirection: 'row',
@@ -55,14 +64,16 @@ const styles = StyleSheet.create({
         padding: 10,
         borderColor: 'black',
         borderRadius: 5,
-        backgroundColor: constants.backgroundDark1,
-        marginLeft: 20
+        backgroundColor: constants.errorColor,
     },
     marginTop: {
         marginTop: 20
     },
     marginTopDouble: {
         marginTop: 50
+    },
+    marginBottom: {
+        marginBottom: 20,
     },
     bold: {
         fontWeight: 'bold'
@@ -98,6 +109,11 @@ const styles = StyleSheet.create({
     heading: {
         fontWeight: 'bold',
         fontSize: 30,
+    },
+    recordRow: {
+        padding: 10,
+        borderBottomColor: 'grey',
+        borderBottomWidth: 2
     }
 });
 
