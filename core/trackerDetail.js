@@ -2,7 +2,8 @@ import React from 'react';
 import {Text, View, ScrollView, Pressable, Alert} from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import { formatDate } from "./utils";
+import { VictoryChart, VictoryLine, VictoryTheme } from "victory-native";
+import { formatDate, transformData } from "./utils";
 
 import styles from './styles'
 
@@ -64,6 +65,20 @@ function TrackerDetail({ route, navigation }) {
             <View style={{alignItems: 'flex-start', flexDirection: 'row', flexWrap: 'wrap'}}>
                 <Text style={styles.heading}>{tracker.name}</Text>
             </View>
+
+            <VictoryChart
+                theme={VictoryTheme.material}
+            >
+                <VictoryLine
+                    style={{
+                        data: { stroke: "tomato" },
+                        parent: {border: "1px solid #ccc"}
+                    }}
+                    data={transformData(tracker.records)}
+                    interpolation='monotoneX'
+                >
+                </VictoryLine>
+            </VictoryChart>
 
             {renderRecords(tracker.records)}
 
