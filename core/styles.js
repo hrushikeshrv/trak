@@ -50,7 +50,6 @@ const styles = StyleSheet.create({
         backgroundColor: constants.background,
         padding: 20,
         flex: 1,
-        paddingTop: Constants.statusBarHeight + 20,
     },
     button: {
         backgroundColor: constants.background,

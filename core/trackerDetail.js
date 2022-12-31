@@ -7,6 +7,7 @@ import { formatDate } from "./utils";
 
 import styles from './styles'
 import Ionicons from "@expo/vector-icons/Ionicons";
+import DateTimePicker from "react-native-modal-datetime-picker";
 
 function deleteTracker(id, navigation) {
     Alert.alert(
@@ -35,40 +36,68 @@ function deleteTracker(id, navigation) {
     )
 }
 
-function TrackerDetail({ route, navigation }) {
-    const { tracker } = route.params;
-    return (
-        <ScrollView style={styles.screenContainer}>
-            <View style={{alignItems: 'flex-start', flexDirection: 'row', flexWrap: 'wrap'}}>
-                <Text style={styles.heading}>{tracker.name}</Text>
-            </View>
-            <TrackerChart tracker={tracker}></TrackerChart>
-            <View style={styles.centeredRow}>
-                <TextInput
-                    placeholder="Add Record"
-                    style={styles.textInput}
-                ></TextInput>
-                <Pressable
-                    style={styles.simpleButton}
-                >
-                    <Ionicons name='add-outline' size={20} color='black'></Ionicons>
-                </Pressable>
-            </View>
+class TrackerDetail extends React.Component{
+    state = {
+        newReading: '',
+        datePickerVisible: false,
+    }
 
-            <Text style={[styles.heading2, styles.marginTopDouble]}>Records</Text>
-            <Records records={tracker.records}></Records>
-            <View style={{alignItems: 'center', paddingBottom: 90}}>
-                <Pressable
-                    style={styles.deleteButton}
-                    onPress={() => {
-                        deleteTracker(tracker.id, navigation);
-                    }}
-                >
-                    <Text style={{color: 'white'}}>DELETE</Text>
-                </Pressable>
-            </View>
-        </ScrollView>
-    )
+    saveRecord = (date) => {
+        console.log(this.state.newReading, date);
+    }
+
+    toggleDatePicker = () => {
+        this.setState(prevState => ({datePickerVisible: !prevState.datePickerVisible}))
+    }
+
+    render() {
+        const { tracker } = this.props.route.params;
+        const navigation = this.props.navigation;
+        console.log(this.state.newReading);
+        return (
+            <ScrollView style={styles.screenContainer}>
+                <DateTimePicker
+                    isVisible={this.state.datePickerVisible}
+                    mode="datetime"
+                    onConfirm={this.saveRecord}
+                    onCancel={this.toggleDatePicker}
+                ></DateTimePicker>
+                <View style={{alignItems: 'flex-start', flexDirection: 'row', flexWrap: 'wrap'}}>
+                    <Text style={styles.heading}>{tracker.name}</Text>
+                </View>
+                <TrackerChart tracker={tracker}></TrackerChart>
+                <View style={styles.centeredRow}>
+                    <TextInput
+                        placeholder="Add Record"
+                        style={styles.textInput}
+                        keyboardType='numeric'
+                        onChangeText={text => {
+                            if (isNaN(text) || isNaN(parseFloat(text))) return;
+                        }}
+                    ></TextInput>
+                    <Pressable
+                        style={styles.simpleButton}
+                        onPress={this.toggleDatePicker}
+                    >
+                        <Ionicons name='add-outline' size={20} color='black'></Ionicons>
+                    </Pressable>
+                </View>
+
+                <Text style={[styles.heading2, styles.marginTopDouble]}>Records</Text>
+                <Records records={tracker.records}></Records>
+                <View style={{alignItems: 'center', paddingBottom: 50}}>
+                    <Pressable
+                        style={styles.deleteButton}
+                        onPress={() => {
+                            deleteTracker(tracker.id, navigation);
+                        }}
+                    >
+                        <Text style={{color: 'white'}}>DELETE</Text>
+                    </Pressable>
+                </View>
+            </ScrollView>
+        )
+    }
 }
 
 
@@ -102,4 +131,7 @@ function Records(props) {
     )
 }
 
-export default TrackerDetail;
+// export default TrackerDetail;
+export default function({ route, navigation }) {
+    return <TrackerDetail route={route} navigation={navigation}></TrackerDetail>
+}

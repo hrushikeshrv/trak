@@ -27,17 +27,15 @@ export default function HomeTabNavigation() {
                 <Tab.Screen
                     name="Dashboard"
                     component={Dashboard}
-                    options={{ headerShown: false }}
                 ></Tab.Screen>
                 <Tab.Screen
                     name="TrackerList"
                     component={NewTrackerNavigation}
-                    options={{ title: 'My Trackers', headerShown: false }}
+                    options={{ title: 'My Trackers' }}
                 ></Tab.Screen>
                 <Tab.Screen
                     name="Settings"
                     component={Settings}
-                    options={{ headerShown: false }}
                 ></Tab.Screen>
             </Tab.Navigator>
         </NavigationContainer>

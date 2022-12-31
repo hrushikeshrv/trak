@@ -63,12 +63,12 @@ class AddRecord extends React.Component {
                 <TextInput
                     style={styles.textInput}
                     keyboardType='numeric'
-                    // placeholder={item.name}
                     onChangeText={text => {
+                        if (isNaN(text) || isNaN(parseFloat(text))) return;
                         let reading = null;
                         this.state.trackers.forEach(t => {
                             if (t.id === item.id) {
-                                reading = {id: item.id, value: parseInt(text)};
+                                reading = {id: item.id, value: parseFloat(text)};
                             }
                         })
                         const newReadings = this.state.readings.filter(r => (r.id !== reading.id));
