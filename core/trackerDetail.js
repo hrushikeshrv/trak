@@ -1,16 +1,17 @@
 import React from 'react';
-import {Text, View, ScrollView, Pressable, Alert} from 'react-native';
+import { Text, View, ScrollView, Pressable, Alert, TextInput } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import TrackerChart from "./trackerChart";
 import { formatDate } from "./utils";
 
 import styles from './styles'
+import Ionicons from "@expo/vector-icons/Ionicons";
 
 function deleteTracker(id, navigation) {
     Alert.alert(
         "Are you sure?",
-        "Are you sure you want to delete this tracker?",
+        "Are you sure you want to delete this tracker? This cannot be undone.",
         [
             {
                 text: "Cancel",
@@ -34,6 +35,43 @@ function deleteTracker(id, navigation) {
     )
 }
 
+function TrackerDetail({ route, navigation }) {
+    const { tracker } = route.params;
+    return (
+        <ScrollView style={styles.screenContainer}>
+            <View style={{alignItems: 'flex-start', flexDirection: 'row', flexWrap: 'wrap'}}>
+                <Text style={styles.heading}>{tracker.name}</Text>
+            </View>
+            <TrackerChart tracker={tracker}></TrackerChart>
+            <View style={styles.centeredRow}>
+                <TextInput
+                    placeholder="Add Record"
+                    style={styles.textInput}
+                ></TextInput>
+                <Pressable
+                    style={styles.simpleButton}
+                >
+                    <Ionicons name='add-outline' size={20} color='black'></Ionicons>
+                </Pressable>
+            </View>
+
+            <Text style={[styles.heading2, styles.marginTopDouble]}>Records</Text>
+            <Records records={tracker.records}></Records>
+            <View style={{alignItems: 'center', paddingBottom: 90}}>
+                <Pressable
+                    style={styles.deleteButton}
+                    onPress={() => {
+                        deleteTracker(tracker.id, navigation);
+                    }}
+                >
+                    <Text style={{color: 'white'}}>DELETE</Text>
+                </Pressable>
+            </View>
+        </ScrollView>
+    )
+}
+
+
 function renderRecordRow(record) {
     const x = new Date(record[0]);
     const y = record[1];
@@ -45,10 +83,10 @@ function renderRecordRow(record) {
     )
 }
 
-function renderRecords(records) {
+function Records(props) {
     const data = [];
-    for (let i = 0; i < records.x.length; i++) {
-        data.push([records.x[i], records.y[i], i]);
+    for (let i = 0; i < props.records.x.length; i++) {
+        data.push([props.records.x[i], props.records.y[i], i]);
     }
     data.sort((a, b) => {
         const d1 = new Date(a[0]);
@@ -61,33 +99,6 @@ function renderRecords(records) {
         <View style={[styles.marginTop, styles.marginBottom]}>
             {data.map(renderRecordRow)}
         </View>
-    )
-}
-
-function TrackerDetail({ route, navigation }) {
-    const { tracker } = route.params;
-    console.log(tracker);
-    return (
-        <ScrollView style={styles.screenContainer}>
-            <View style={{alignItems: 'flex-start', flexDirection: 'row', flexWrap: 'wrap'}}>
-                <Text style={styles.heading}>{tracker.name}</Text>
-            </View>
-
-            <TrackerChart tracker={tracker}></TrackerChart>
-
-            {renderRecords(tracker.records)}
-
-            <View style={{alignItems: 'center'}}>
-                <Pressable
-                    style={styles.deleteButton}
-                    onPress={() => {
-                        deleteTracker(tracker.id, navigation);
-                    }}
-                >
-                    <Text style={{color: 'white'}}>DELETE</Text>
-                </Pressable>
-            </View>
-        </ScrollView>
     )
 }
 

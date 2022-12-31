@@ -1,5 +1,5 @@
 import React from 'react';
-import {Text, TextInput, View, Pressable, FlatList, ScrollView } from 'react-native';
+import {Text, TextInput, View, Pressable, ScrollView, SafeAreaView } from 'react-native';
 import Ionicons from '@expo/vector-icons/Ionicons';
 import {useFocusEffect, useNavigation} from '@react-navigation/native';
 import AsyncStorage from "@react-native-async-storage/async-storage";
@@ -49,7 +49,8 @@ class TrackerList extends React.Component {
     render() {
         const { navigation } = this.props;
         return (
-            <View style={styles.screenContainer}>
+            <SafeAreaView style={styles.screenContainer}>
+                <Text style={[styles.heading, styles.marginBottom]}>My Trackers</Text>
                 <UpdateTrackerList onUpdate={this.updateTrackerList}></UpdateTrackerList>
                 <View style={[styles.centeredRow]}>
                     <Pressable
@@ -81,7 +82,7 @@ class TrackerList extends React.Component {
                 >
                     {this.state.trackers.map(this.renderTrackerTile)}
                 </ScrollView>
-            </View>
+            </SafeAreaView>
         )
     }
 }

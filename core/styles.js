@@ -1,4 +1,5 @@
 import {StyleSheet} from "react-native";
+import Constants from 'expo-constants';
 
 export const constants = {
     background: 'white',
@@ -49,6 +50,7 @@ const styles = StyleSheet.create({
         backgroundColor: constants.background,
         padding: 20,
         flex: 1,
+        paddingTop: Constants.statusBarHeight + 20,
     },
     button: {
         backgroundColor: constants.background,
@@ -60,9 +62,13 @@ const styles = StyleSheet.create({
         marginLeft: 5,
         marginRight: 5,
     },
+    simpleButton: {
+        padding: 10,
+        borderRadius: 5,
+        backgroundColor: constants.primaryColor,
+    },
     deleteButton: {
         padding: 10,
-        borderColor: 'black',
         borderRadius: 5,
         backgroundColor: constants.errorColor,
     },
@@ -109,6 +115,10 @@ const styles = StyleSheet.create({
     heading: {
         fontWeight: 'bold',
         fontSize: 30,
+    },
+    heading2: {
+        fontWeight: 'bold',
+        fontSize: 22,
     },
     recordRow: {
         padding: 10,

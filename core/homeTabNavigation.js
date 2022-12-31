@@ -24,9 +24,21 @@ export default function HomeTabNavigation() {
                     tabBarActiveTintColor: '#D32F2F'
                 })}
             >
-                <Tab.Screen name="Dashboard" component={Dashboard}></Tab.Screen>
-                <Tab.Screen name="TrackerList" component={NewTrackerNavigation} options={{ title: 'My Trackers' }}></Tab.Screen>
-                <Tab.Screen name="Settings" component={Settings}></Tab.Screen>
+                <Tab.Screen
+                    name="Dashboard"
+                    component={Dashboard}
+                    options={{ headerShown: false }}
+                ></Tab.Screen>
+                <Tab.Screen
+                    name="TrackerList"
+                    component={NewTrackerNavigation}
+                    options={{ title: 'My Trackers', headerShown: false }}
+                ></Tab.Screen>
+                <Tab.Screen
+                    name="Settings"
+                    component={Settings}
+                    options={{ headerShown: false }}
+                ></Tab.Screen>
             </Tab.Navigator>
         </NavigationContainer>
     )

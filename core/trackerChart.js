@@ -3,12 +3,12 @@ import {VictoryAxis, VictoryChart, VictoryLine, VictoryTheme} from "victory-nati
 import {transformData} from "./utils";
 
 function getTickFormat(tick) {
+    if (typeof tick === 'number') return tick;
     return tick.split('T')[0].slice(2);
 }
 
 export default function TrackerChart(props) {
     const data = transformData(props.tracker.records);
-    console.log(data);
     return (
         <VictoryChart
             theme={VictoryTheme.material}
