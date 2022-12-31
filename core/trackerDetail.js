@@ -2,8 +2,8 @@ import React from 'react';
 import {Text, View, ScrollView, Pressable, Alert} from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import { VictoryChart, VictoryLine, VictoryTheme } from "victory-native";
-import { formatDate, transformData } from "./utils";
+import TrackerChart from "./trackerChart";
+import { formatDate } from "./utils";
 
 import styles from './styles'
 
@@ -39,7 +39,7 @@ function renderRecordRow(record) {
     const y = record[1];
     return (
         <View style={[styles.row, styles.jcsb, styles.recordRow]} key={record[2]}>
-            <Text>{formatDate(x)}</Text>
+            <Text style={{fontFamily: 'monospace'}}>{formatDate(x)}</Text>
             <Text style={{fontFamily: 'monospace', fontSize: 18}}>{y}</Text>
         </View>
     )
@@ -50,6 +50,13 @@ function renderRecords(records) {
     for (let i = 0; i < records.x.length; i++) {
         data.push([records.x[i], records.y[i], i]);
     }
+    data.sort((a, b) => {
+        const d1 = new Date(a[0]);
+        const d2 = new Date(b[0]);
+        if (d1 < d2) return -1;
+        if (d1 > d2) return 1;
+        return 0;
+    })
     return (
         <View style={[styles.marginTop, styles.marginBottom]}>
             {data.map(renderRecordRow)}
@@ -66,19 +73,7 @@ function TrackerDetail({ route, navigation }) {
                 <Text style={styles.heading}>{tracker.name}</Text>
             </View>
 
-            <VictoryChart
-                theme={VictoryTheme.material}
-            >
-                <VictoryLine
-                    style={{
-                        data: { stroke: "tomato" },
-                        parent: {border: "1px solid #ccc"}
-                    }}
-                    data={transformData(tracker.records)}
-                    interpolation='monotoneX'
-                >
-                </VictoryLine>
-            </VictoryChart>
+            <TrackerChart tracker={tracker}></TrackerChart>
 
             {renderRecords(tracker.records)}
 
