@@ -1,5 +1,5 @@
 import React from 'react';
-import {VictoryAxis, VictoryChart, VictoryLine, VictoryTheme} from "victory-native";
+import {VictoryAxis, VictoryChart, VictoryLine, VictoryTheme, VictoryVoronoiContainer} from "victory-native";
 import {transformData} from "./utils";
 
 function getTickFormat(tick) {
@@ -12,6 +12,13 @@ export default function TrackerChart(props) {
     return (
         <VictoryChart
             theme={VictoryTheme.material}
+            domainPadding={{x: [10, 10], y: [10, 20]}}
+            containerComponent={
+                <VictoryVoronoiContainer
+                    voronoiDimension="x"
+                    labels={ ({ datum }) => `${datum.y}` }
+                />
+            }
         >
             <VictoryLine
                 style={{
@@ -20,7 +27,6 @@ export default function TrackerChart(props) {
                 }}
                 data={data}
                 interpolation='monotoneX'
-                labels={({datum}) => datum.y}
             >
             </VictoryLine>
             <VictoryAxis

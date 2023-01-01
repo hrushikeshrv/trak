@@ -43,7 +43,34 @@ class TrackerDetail extends React.Component{
     }
 
     saveRecord = (date) => {
-        console.log(this.state.newReading, date);
+        const { tracker } = this.props.route.params;
+        const id = tracker.id;
+
+        AsyncStorage.getItem('Trackers')
+            .then(trackers => {
+                trackers = JSON.parse(trackers);
+                for (let i = 0; i < trackers.length; i++) {
+                    if (trackers[i].id === id) {
+                        trackers[i].records.x.push(date);
+                        trackers[i].records.y.push(parseFloat(this.state.newReading));
+                        break;
+                    }
+                }
+                AsyncStorage.setItem('Trackers', JSON.stringify(trackers))
+                    .then(() => {
+                        let idx = 0;
+                        for (let i = 0; i < tracker.records.x.length; i++) {
+                            if (tracker.records.x[i].toString() > date.toString()) {
+                                idx = i-1;
+                                break;
+                            }
+                        }
+                        tracker.records.x.splice(idx, 0, date.toString());
+                        console.log(tracker.records.x);
+                        tracker.records.y.splice(idx, 0, parseFloat(this.state.newReading));
+                        this.setState({ newReading: '' })
+                    })
+            })
     }
 
     toggleDatePicker = () => {
@@ -53,7 +80,6 @@ class TrackerDetail extends React.Component{
     render() {
         const { tracker } = this.props.route.params;
         const navigation = this.props.navigation;
-        console.log(this.state.newReading);
         return (
             <ScrollView style={styles.screenContainer}>
                 <DateTimePicker
@@ -73,6 +99,7 @@ class TrackerDetail extends React.Component{
                         keyboardType='numeric'
                         onChangeText={text => {
                             if (isNaN(text) || isNaN(parseFloat(text))) return;
+                            this.setState({ newReading: text })
                         }}
                     ></TextInput>
                     <Pressable
