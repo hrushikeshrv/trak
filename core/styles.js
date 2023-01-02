@@ -64,7 +64,7 @@ const styles = StyleSheet.create({
     simpleButton: {
         padding: 10,
         borderRadius: 5,
-        backgroundColor: constants.primaryColor,
+        backgroundColor: 'black',
     },
     deleteButton: {
         padding: 10,
@@ -79,6 +79,13 @@ const styles = StyleSheet.create({
     },
     marginBottom: {
         marginBottom: 20,
+    },
+    marginBottomDouble: {
+        marginBottom: 50,
+    },
+    spacelr: {
+        marginRight: 10,
+        marginLeft: 10,
     },
     bold: {
         fontWeight: 'bold'

@@ -108,15 +108,24 @@ class TrackerDetail extends React.Component{
                             if (this.state.newReading) this.toggleDatePicker();
                         }}
                     >
-                        <Ionicons name='add-outline' size={20} color='black'></Ionicons>
+                        <Ionicons name='add-outline' size={20} color='white'></Ionicons>
                     </Pressable>
                 </View>
 
                 <Text style={[styles.heading2, styles.marginTopDouble]}>Records</Text>
                 <Records records={tracker.records}></Records>
-                <View style={{alignItems: 'center', paddingBottom: 50}}>
+                <View style={[styles.centeredRow, styles.marginBottomDouble]}>
                     <Pressable
-                        style={styles.deleteButton}
+                        style={[styles.simpleButton, styles.spacelr]}
+                        onPress={() => {
+                            const { navigation } = this.props;
+                            navigation.navigate('ListTrackerRecords');
+                        }}
+                    >
+                        <Text style={{ fontWeight: 'bold', color: 'white' }}>Records</Text>
+                    </Pressable>
+                    <Pressable
+                        style={[styles.deleteButton, styles.spacelr]}
                         onPress={() => {
                             deleteTracker(tracker.id, navigation);
                         }}
