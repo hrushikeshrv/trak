@@ -22,7 +22,7 @@ export default function TrackerChart(props) {
         >
             <VictoryLine
                 style={{
-                    data: { stroke: "tomato" },
+                    data: { stroke: "tomato", strokeWidth: 3 },
                     parent: {border: "1px solid #ccc"}
                 }}
                 data={data}

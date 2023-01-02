@@ -104,7 +104,9 @@ class TrackerDetail extends React.Component{
                     ></TextInput>
                     <Pressable
                         style={styles.simpleButton}
-                        onPress={this.toggleDatePicker}
+                        onPress={() => {
+                            if (this.state.newReading) this.toggleDatePicker();
+                        }}
                     >
                         <Ionicons name='add-outline' size={20} color='black'></Ionicons>
                     </Pressable>
