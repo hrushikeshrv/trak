@@ -1,6 +1,13 @@
 import React from 'react';
-import {VictoryAxis, VictoryChart, VictoryLine, VictoryTheme, VictoryVoronoiContainer} from "victory-native";
-import {transformData} from "./utils";
+import {
+    VictoryAxis,
+    VictoryChart,
+    VictoryLine,
+    VictoryTheme,
+    VictoryTooltip,
+    VictoryVoronoiContainer
+} from "victory-native";
+import {transformData, formatDate} from "./utils";
 
 function getTickFormat(tick) {
     if (typeof tick === 'number') return tick;
@@ -16,7 +23,8 @@ export default function TrackerChart(props) {
             containerComponent={
                 <VictoryVoronoiContainer
                     voronoiDimension="x"
-                    labels={ ({ datum }) => `${datum.y}` }
+                    labels={ ({ datum }) => `${datum.y}\n${formatDate(new Date(datum.x))}` }
+                    labelComponent={<VictoryTooltip constrainToVisibleArea></VictoryTooltip>}
                 />
             }
         >

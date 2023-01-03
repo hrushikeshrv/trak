@@ -112,14 +112,12 @@ class TrackerDetail extends React.Component{
                     </Pressable>
                 </View>
 
-                <Text style={[styles.heading2, styles.marginTopDouble]}>Records</Text>
-                <Records records={tracker.records}></Records>
-                <View style={[styles.centeredRow, styles.marginBottomDouble]}>
+                <View style={[styles.centeredRow, styles.marginBottomDouble, styles.marginTopDouble]}>
                     <Pressable
                         style={[styles.simpleButton, styles.spacelr]}
                         onPress={() => {
                             const { navigation } = this.props;
-                            navigation.navigate('ListTrackerRecords');
+                            navigation.navigate('ListTrackerRecords', {tracker: this.props.route.params.tracker});
                         }}
                     >
                         <Text style={{ fontWeight: 'bold', color: 'white' }}>Records</Text>
@@ -136,37 +134,6 @@ class TrackerDetail extends React.Component{
             </ScrollView>
         )
     }
-}
-
-
-function renderRecordRow(record) {
-    const x = new Date(record[0]);
-    const y = record[1];
-    return (
-        <View style={[styles.row, styles.jcsb, styles.recordRow]} key={record[2]}>
-            <Text style={{fontFamily: 'monospace'}}>{formatDate(x)}</Text>
-            <Text style={{fontFamily: 'monospace', fontSize: 18}}>{y}</Text>
-        </View>
-    )
-}
-
-function Records(props) {
-    const data = [];
-    for (let i = 0; i < props.records.x.length; i++) {
-        data.push([props.records.x[i], props.records.y[i], i]);
-    }
-    data.sort((a, b) => {
-        const d1 = new Date(a[0]);
-        const d2 = new Date(b[0]);
-        if (d1 < d2) return -1;
-        if (d1 > d2) return 1;
-        return 0;
-    })
-    return (
-        <View style={[styles.marginTop, styles.marginBottom]}>
-            {data.map(renderRecordRow)}
-        </View>
-    )
 }
 
 // export default TrackerDetail;

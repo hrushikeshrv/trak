@@ -50,7 +50,6 @@ class TrackerList extends React.Component {
         const { navigation } = this.props;
         return (
             <View style={styles.screenContainer}>
-                <Text style={[styles.heading, styles.marginBottom]}>My Trackers</Text>
                 <UpdateTrackerList onUpdate={this.updateTrackerList}></UpdateTrackerList>
                 <View style={[styles.centeredRow]}>
                     <Pressable
