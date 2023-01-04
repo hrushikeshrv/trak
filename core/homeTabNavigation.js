@@ -4,8 +4,8 @@ import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import Ionicons from '@expo/vector-icons/Ionicons';
 
 import Dashboard from "./dashboard";
-import Settings from "./settings";
-import NewTrackerNavigation from "./newTrackerNavigation";
+import Settings from "./settings/settings";
+import HomeStackNavigation from "./homeStackNavigation";
 
 const Tab = createBottomTabNavigator();
 
@@ -30,7 +30,7 @@ export default function HomeTabNavigation() {
                 ></Tab.Screen>
                 <Tab.Screen
                     name="TrackerList"
-                    component={NewTrackerNavigation}
+                    component={HomeStackNavigation}
                     options={{ title: 'My Trackers' }}
                 ></Tab.Screen>
                 <Tab.Screen

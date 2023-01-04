@@ -14,12 +14,11 @@ export default class Dashboard extends React.Component {
     componentDidMount() {
         let tracker1Id = null;
         let tracker2Id = null;
-        AsyncStorage.getItem('DefaultTrackers')
-            .then(trackers => {
-                if (!trackers) return;
-                trackers = JSON.parse(trackers);
-                tracker1Id = trackers[0];
-                tracker2Id = trackers[1];
+        AsyncStorage.getItem('Settings')
+            .then(settings => {
+                settings = JSON.parse(settings);
+                tracker1Id = settings.defaultTracker1;
+                tracker2Id = settings.defaultTracker2;
             })
         AsyncStorage.getItem('Trackers')
             .then(trackers => {

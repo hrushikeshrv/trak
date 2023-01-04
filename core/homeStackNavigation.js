@@ -8,7 +8,7 @@ import TrackerRecordList from "./trackerRecordList";
 
 const Stack = createNativeStackNavigator();
 
-export default function NewTrackerNavigation() {
+export default function HomeStackNavigation() {
     return (
         <Stack.Navigator>
             <Stack.Screen name='ListTrackers' component={TrackerList} options={{ headerShown: false }}></Stack.Screen>

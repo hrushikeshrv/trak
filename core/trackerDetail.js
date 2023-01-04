@@ -92,7 +92,7 @@ class TrackerDetail extends React.Component{
                     <Text style={styles.heading}>{tracker.name}</Text>
                 </View>
                 <TrackerChart tracker={tracker}></TrackerChart>
-                <View style={styles.centeredRow}>
+                <View style={[styles.centeredRow, styles.marginTop]}>
                     <TextInput
                         placeholder="Add Record"
                         style={styles.textInput}
@@ -112,7 +112,7 @@ class TrackerDetail extends React.Component{
                     </Pressable>
                 </View>
 
-                <View style={[styles.centeredRow, styles.marginBottomDouble, styles.marginTopDouble]}>
+                <View style={[styles.centeredRow, styles.marginBottomDouble, styles.marginTop]}>
                     <Pressable
                         style={[styles.simpleButton, styles.spacelr]}
                         onPress={() => {

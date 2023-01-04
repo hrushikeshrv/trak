@@ -1,5 +1,4 @@
 import {StyleSheet} from "react-native";
-import Constants from 'expo-constants';
 
 export const constants = {
     background: 'white',
@@ -130,6 +129,14 @@ const styles = StyleSheet.create({
         padding: 10,
         borderBottomColor: 'grey',
         borderBottomWidth: 2
+    },
+    settingsRow: {
+        paddingTop: 20,
+        paddingBottom: 20,
+        paddingLeft: 10,
+        paddingRight: 10,
+        borderBottomWidth: 1,
+        borderBottomColor: 'black',
     }
 });
 
