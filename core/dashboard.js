@@ -42,15 +42,16 @@ export default class Dashboard extends React.Component {
                 </ScrollView>
             )
         return (
-            <ScrollView>
+            <ScrollView style={styles.screenContainer}>
                 <DashboardChart tracker={this.state.tracker1}></DashboardChart>
                 <DashboardChart tracker={this.state.tracker2}></DashboardChart>
+                <View style={styles.paddingBottomDouble}></View>
             </ScrollView>
         )
     }
 }
 
-function DashboardChart(tracker) {
+function DashboardChart({ tracker }) {
     if (!tracker) return null;
     return (
         <View style={{ flex: 1 }}>

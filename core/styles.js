@@ -82,6 +82,12 @@ const styles = StyleSheet.create({
     marginBottomDouble: {
         marginBottom: 50,
     },
+    paddingBottom: {
+        paddingBottom: 20,
+    },
+    paddingBottomDouble: {
+        paddingBottom: 50,
+    },
     spacelr: {
         marginRight: 10,
         marginLeft: 10,
