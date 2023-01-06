@@ -19,7 +19,7 @@ export default function TrackerChart(props) {
     return (
         <VictoryChart
             theme={VictoryTheme.material}
-            domainPadding={{x: [10, 10], y: [10, 20]}}
+            domainPadding={{x: [10, 20], y: [10, 20]}}
             containerComponent={
                 <VictoryVoronoiContainer
                     voronoiDimension="x"
@@ -30,7 +30,7 @@ export default function TrackerChart(props) {
         >
             <VictoryLine
                 style={{
-                    data: { stroke: "tomato", strokeWidth: 3 },
+                    data: { stroke: "#1D262A", strokeWidth: 3 },
                     parent: {border: "1px solid #ccc"}
                 }}
                 data={data}

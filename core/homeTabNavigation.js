@@ -21,7 +21,7 @@ export default function HomeTabNavigation() {
                         else if (route.name === 'Settings') iconName = focused ? 'settings' : 'settings-outline';
                         return <Ionicons name={iconName} size={size} color={color}></Ionicons>
                     },
-                    tabBarActiveTintColor: '#D32F2F'
+                    tabBarActiveTintColor: 'black'
                 })}
             >
                 <Tab.Screen

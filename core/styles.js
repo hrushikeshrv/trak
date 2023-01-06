@@ -7,11 +7,11 @@ export const constants = {
     fontColor: 'black',
     mutedFontColor: 'grey',
 
-    primaryLight2: '#E57373',
-    primaryLight1: '#EF5350',
-    primaryColor: '#F44336',
-    primaryDark1: '#E53935',
-    primaryDark2: '#D32F2F',
+    primaryLight2: '#404040',
+    primaryLight1: '#333333',
+    primaryColor: '#212C31',
+    primaryDark1: '#1D262A',
+    primaryDark2: '#13191C',
 
     errorLight2: '#E57373',
     errorLight1: '#EF5350',
