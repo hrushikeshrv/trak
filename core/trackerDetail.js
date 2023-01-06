@@ -66,7 +66,6 @@ class TrackerDetail extends React.Component{
                             }
                         }
                         tracker.records.x.splice(idx, 0, date.toString());
-                        console.log(tracker.records.x);
                         tracker.records.y.splice(idx, 0, parseFloat(this.state.newReading));
                         this.setState({ newReading: '' })
                     })

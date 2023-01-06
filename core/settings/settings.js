@@ -138,7 +138,7 @@ export default class Settings extends React.Component {
                         ><Text style={{ color: 'white', textAlign: 'center' }}>Done</Text></Pressable>
                     </View>
                 </Modal>
-                <Text style={{ margin: 6 }}>Set your default trackers (requires app restart)</Text>
+                <Text style={{ margin: 6 }}>Set your default trackers</Text>
                 <this.DefaultTrackerRow tracker={this.state.defaultTracker1} id={1}></this.DefaultTrackerRow>
                 <this.DefaultTrackerRow tracker={this.state.defaultTracker2} id={2}></this.DefaultTrackerRow>
             </ScrollView>

@@ -23,7 +23,6 @@ class NewTracker extends React.Component {
                 y: []
             }
         }
-        console.log(JSON.stringify(tracker));
         let maxId = 0;
         AsyncStorage.getItem('Trackers')
             .then(trackers => {
