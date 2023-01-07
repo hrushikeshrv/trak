@@ -143,6 +143,9 @@ const styles = StyleSheet.create({
         paddingRight: 10,
         borderBottomWidth: 1,
         borderBottomColor: 'black',
+    },
+    settingsHeader: {
+        marginTop: 30,
     }
 });
 

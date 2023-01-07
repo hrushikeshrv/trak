@@ -46,7 +46,6 @@ export default class Dashboard extends React.Component {
     }
 
     render() {
-        console.log(this.state.isReady);
         if (!this.state.isReady)
             return (
                 <View style={styles.screenContainer}>

@@ -138,9 +138,59 @@ export default class Settings extends React.Component {
                         ><Text style={{ color: 'white', textAlign: 'center' }}>Done</Text></Pressable>
                     </View>
                 </Modal>
-                <Text style={{ margin: 6 }}>Set your default trackers</Text>
+                <Text style={[styles.settingsHeader, { marginTop: 10 }]}>Set your default trackers</Text>
                 <this.DefaultTrackerRow tracker={this.state.defaultTracker1} id={1}></this.DefaultTrackerRow>
                 <this.DefaultTrackerRow tracker={this.state.defaultTracker2} id={2}></this.DefaultTrackerRow>
+
+                <Text style={styles.settingsHeader}>Your data</Text>
+                <Pressable
+                    style={styles.settingsRow}
+                    onPress={() => {}}
+                >
+                    <Text style={{ fontWeight: 'bold' }}>Import Data</Text>
+                </Pressable>
+                <Pressable
+                    style={styles.settingsRow}
+                    onPress={() => {}}
+                >
+                    <Text style={{ fontWeight: 'bold' }}>Export Data</Text>
+                </Pressable>
+                <Pressable
+                    style={styles.settingsRow}
+                    onPress={() => {}}
+                >
+                    <Text style={{ fontWeight: 'bold' }}>Privacy Policy</Text>
+                </Pressable>
+
+                <Text style={styles.settingsHeader}>Notifications</Text>
+                <Pressable
+                    style={styles.settingsRow}
+                    onPress={() => {}}
+                >
+                    <Text style={{ fontWeight: 'bold' }}>Manage Notifications</Text>
+                </Pressable>
+
+                <Text style={styles.settingsHeader}>Help</Text>
+                <Pressable
+                    style={styles.settingsRow}
+                    onPress={() => {}}
+                >
+                    <Text style={{ fontWeight: 'bold' }}>Report an issue</Text>
+                </Pressable>
+                <Pressable
+                    style={styles.settingsRow}
+                    onPress={() => {}}
+                >
+                    <Text style={{ fontWeight: 'bold' }}>Contact Developers</Text>
+                </Pressable>
+                <Pressable
+                    style={styles.settingsRow}
+                    onPress={() => {}}
+                >
+                    <Text style={{ fontWeight: 'bold' }}>Terms of service</Text>
+                </Pressable>
+
+                <View style={{ padding: 30 }}></View>
             </ScrollView>
         )
     }
