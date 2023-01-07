@@ -77,12 +77,23 @@ export default class Dashboard extends React.Component {
 
 function DashboardChart({ tracker }) {
     if (!tracker) return null;
+
+    let mean = tracker.records.y.reduce((partialSum, a) => partialSum + a) / tracker.records.y.length;
+    let variance = 0;
+    for (let i = 0; i < tracker.records.y.length; i++) {
+        variance += (tracker.records.y[i] - mean) ** 2;
+    }
+    variance = Math.round(Math.sqrt(variance) * 1000 / tracker.records.y.length) / 1000;
+
     return (
         <View style={{ flex: 1 }}>
             <Pressable>
                 <Text style={styles.heading}>{tracker.name}</Text>
             </Pressable>
             <TrackerChart tracker={tracker}></TrackerChart>
+            <View style={[styles.dashboardTrackerStats]}>
+                <View style={styles.dashboardStat}><Text>{variance}</Text></View>
+            </View>
         </View>
     )
 }

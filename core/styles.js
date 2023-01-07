@@ -88,6 +88,9 @@ const styles = StyleSheet.create({
     paddingBottomDouble: {
         paddingBottom: 50,
     },
+    padding20: {
+        padding: 20
+    },
     spacelr: {
         marginRight: 10,
         marginLeft: 10,
@@ -147,6 +150,15 @@ const styles = StyleSheet.create({
     },
     settingsHeader: {
         marginTop: 30,
+    },
+    dashboardTrackerStats: {
+        borderRadius: 6,
+        backgroundColor: constants.backgroundDark1,
+        padding: 20,
+        margin: 20,
+    },
+    dashboardStat: {
+
     }
 });
 
