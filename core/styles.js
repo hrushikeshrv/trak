@@ -156,9 +156,16 @@ const styles = StyleSheet.create({
         backgroundColor: constants.backgroundDark1,
         padding: 20,
         margin: 20,
+        flexDirection: 'row',
+        justifyContent: 'space-evenly'
     },
     dashboardStat: {
-
+        fontFamily: 'monospace',
+        fontSize: 18
+    },
+    statHeading: {
+        fontWeight: 'bold',
+        textAlign: 'center'
     }
 });
 

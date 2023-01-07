@@ -4,6 +4,7 @@ import styles from './styles'
 import TrackerChart from "./trackerChart";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import {useFocusEffect} from "@react-navigation/native";
+import {getRecordVariance, getRegressionLine} from "./utils";
 
 function UpdateTrackers({ onUpdate }) {
     useFocusEffect(React.useCallback(() => {
@@ -77,13 +78,8 @@ export default class Dashboard extends React.Component {
 
 function DashboardChart({ tracker }) {
     if (!tracker) return null;
-
-    let mean = tracker.records.y.reduce((partialSum, a) => partialSum + a) / tracker.records.y.length;
-    let variance = 0;
-    for (let i = 0; i < tracker.records.y.length; i++) {
-        variance += (tracker.records.y[i] - mean) ** 2;
-    }
-    variance = Math.round(Math.sqrt(variance) * 1000 / tracker.records.y.length) / 1000;
+    const variance = getRecordVariance(tracker.records);
+    const [constant, slope] = getRegressionLine(tracker.records);
 
     return (
         <View style={{ flex: 1 }}>
@@ -92,7 +88,14 @@ function DashboardChart({ tracker }) {
             </Pressable>
             <TrackerChart tracker={tracker}></TrackerChart>
             <View style={[styles.dashboardTrackerStats]}>
-                <View style={styles.dashboardStat}><Text>{variance}</Text></View>
+                <View>
+                    <Text style={styles.dashboardStat}>{variance}</Text>
+                    <Text style={styles.statHeading}>Variance</Text>
+                </View>
+                <View>
+                    <Text style={styles.dashboardStat}>{slope > 0 ? '+' : ''}{slope}/day</Text>
+                    <Text style={styles.statHeading}>Trend</Text>
+                </View>
             </View>
         </View>
     )
