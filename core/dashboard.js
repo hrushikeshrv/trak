@@ -3,8 +3,9 @@ import { Text, ScrollView, Pressable, View } from 'react-native';
 import styles from './styles'
 import TrackerChart from "./trackerChart";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import {useFocusEffect} from "@react-navigation/native";
+import {useFocusEffect, useNavigation} from "@react-navigation/native";
 import {getRecordVariance, getRegressionLine} from "./utils";
+import Ionicons from "@expo/vector-icons/Ionicons";
 
 function UpdateTrackers({ onUpdate }) {
     useFocusEffect(React.useCallback(() => {
@@ -78,25 +79,19 @@ export default class Dashboard extends React.Component {
 
 function DashboardChart({ tracker }) {
     if (!tracker) return null;
-    const variance = getRecordVariance(tracker.records);
-    const [constant, slope] = getRegressionLine(tracker.records);
+    const navigation = useNavigation();
 
     return (
         <View style={{ flex: 1 }}>
-            <Pressable>
-                <Text style={styles.heading}>{tracker.name}</Text>
+            <Pressable
+                onPress={() => {navigation.navigate('TrackerList', {params: { tracker }, screen: 'DetailTracker'})}}
+            >
+                <View style={[styles.row, { alignItems: 'center' }]}>
+                    <Text style={[styles.heading, { marginRight: 10 }]}>{tracker.name}</Text>
+                    <Ionicons name='arrow-forward' size={20} color='black'></Ionicons>
+                </View>
             </Pressable>
             <TrackerChart tracker={tracker}></TrackerChart>
-            <View style={[styles.dashboardTrackerStats]}>
-                <View>
-                    <Text style={styles.dashboardStat}>{variance}</Text>
-                    <Text style={styles.statHeading}>Variance</Text>
-                </View>
-                <View>
-                    <Text style={styles.dashboardStat}>{slope > 0 ? '+' : ''}{slope}/day</Text>
-                    <Text style={styles.statHeading}>Trend</Text>
-                </View>
-            </View>
         </View>
     )
 }

@@ -2,7 +2,7 @@ import {StyleSheet} from "react-native";
 
 export const constants = {
     background: 'white',
-    backgroundDark1: '#DEDEDE',
+    backgroundDark1: '#EFEFEF',
 
     fontColor: 'black',
     mutedFontColor: 'grey',
@@ -161,7 +161,8 @@ const styles = StyleSheet.create({
     },
     dashboardStat: {
         fontFamily: 'monospace',
-        fontSize: 18
+        fontSize: 18,
+        textAlign: 'center'
     },
     statHeading: {
         fontWeight: 'bold',
