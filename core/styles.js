@@ -126,6 +126,7 @@ const styles = StyleSheet.create({
     heading: {
         fontWeight: 'bold',
         fontSize: 30,
+        fontFamily: 'AlfaSlabOne'
     },
     heading2: {
         fontWeight: 'bold',
