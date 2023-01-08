@@ -120,13 +120,13 @@ const styles = StyleSheet.create({
         flexWrap: 'wrap',
     },
     trackerTile: {
-        width: '80%',
+        width: '40%',
         padding: 20,
         margin: 10,
         borderRadius: 5,
         alignItems: 'center',
         justifyContent: 'center',
-        backgroundColor: constants.primaryLight1,
+        backgroundColor: constants.primaryDark1,
         color: 'black',
         borderColor: constants.primaryDark1,
         borderWidth: 3

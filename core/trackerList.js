@@ -41,7 +41,7 @@ class TrackerList extends React.Component {
                 onPress={() => {navigation.navigate('DetailTracker', {tracker: item})}}
                 style={styles.trackerTile} key={item.id}
             >
-                <Text style={{fontSize: 20, color: 'white', fontWeight: 'bold' }}>{item.name}</Text>
+                <Text style={{fontSize: 16, color: 'white', fontWeight: 'bold' }}>{item.name}</Text>
             </Pressable>
         )
     }
@@ -77,7 +77,15 @@ class TrackerList extends React.Component {
                     onChangeText={this.searchTracker}
                 ></TextInput>
                 <ScrollView
-                    contentContainerStyle={{alignItems: 'center', paddingTop: 20}}
+                    contentContainerStyle={
+                        {
+                            alignItems: 'stretch',
+                            justifyContent: 'center',
+                            paddingTop: 20,
+                            flexDirection: 'row',
+                            flexWrap: 'wrap'
+                        }
+                    }
                 >
                     {this.state.trackers.map(this.renderTrackerTile)}
                 </ScrollView>
