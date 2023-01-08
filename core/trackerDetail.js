@@ -40,10 +40,12 @@ class TrackerDetail extends React.Component{
     state = {
         newReading: '',
         datePickerVisible: false,
+        newDate: new Date(),
     }
 
-    saveRecord = (date) => {
+    saveRecord = () => {
         const { tracker } = this.props.route.params;
+        const date = this.state.newDate;
         const id = tracker.id;
 
         AsyncStorage.getItem('Trackers')
@@ -67,7 +69,7 @@ class TrackerDetail extends React.Component{
                         }
                         tracker.records.x.splice(idx, 0, date.toString());
                         tracker.records.y.splice(idx, 0, parseFloat(this.state.newReading));
-                        this.setState({ newReading: '' })
+                        this.setState({ newReading: '', newDate: new Date() })
                     })
             })
     }
@@ -84,14 +86,17 @@ class TrackerDetail extends React.Component{
                 <DateTimePicker
                     isVisible={this.state.datePickerVisible}
                     mode="datetime"
-                    onConfirm={this.saveRecord}
+                    onConfirm={date => {
+                        this.setState({ newDate: date});
+                        this.toggleDatePicker();
+                    }}
                     onCancel={this.toggleDatePicker}
                 ></DateTimePicker>
                 <View style={{alignItems: 'flex-start', flexDirection: 'row', flexWrap: 'wrap'}}>
                     <Text style={styles.heading}>{tracker.name}</Text>
                 </View>
                 <TrackerChart tracker={tracker}></TrackerChart>
-                <View style={[styles.centeredRow, styles.marginTop]}>
+                <View style={[styles.marginTop, styles.newRecordFieldset]}>
                     <TextInput
                         placeholder="Add Record"
                         style={styles.textInput}
@@ -102,16 +107,25 @@ class TrackerDetail extends React.Component{
                         }}
                     ></TextInput>
                     <Pressable
-                        style={styles.simpleButton}
+                        onPress={this.toggleDatePicker}
+                        style={[styles.textInput, {paddingTop: 12, paddingBottom: 10}]}
+                    >
+                        <Text style={{fontWeight: 'bold'}}>{formatDate(this.state.newDate)}</Text>
+                    </Pressable>
+                    <Pressable
+                        style={[styles.simpleButton, styles.marginTop, {width: '80%', alignSelf: 'center'}]}
                         onPress={() => {
-                            if (this.state.newReading) this.toggleDatePicker();
+                            if (this.state.newReading && this.state.newDate) this.saveRecord();
                         }}
                     >
-                        <Ionicons name='add-outline' size={20} color='white'></Ionicons>
+                        <View style={styles.centeredRow}>
+                            <Ionicons name='add-outline' size={20} color='white'></Ionicons>
+                            <Text style={{ color: 'white' }}>Save</Text>
+                        </View>
                     </Pressable>
                 </View>
 
-                <View style={[styles.centeredRow, styles.marginBottomDouble, styles.marginTop]}>
+                <View style={[styles.centeredRow, styles.marginBottomDouble, styles.marginTopDouble]}>
                     <Pressable
                         style={[styles.simpleButton, styles.spacelr]}
                         onPress={() => {

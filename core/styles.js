@@ -106,8 +106,12 @@ const styles = StyleSheet.create({
         borderBottomColor: constants.primaryDark1,
         borderBottomWidth: 2,
         padding: 7,
+        paddingLeft: 10,
         margin: 5,
-        minWidth: 200
+        minWidth: 200,
+        backgroundColor: constants.backgroundDark1,
+        borderTopLeftRadius: 7,
+        borderTopRightRadius: 7,
     },
     trackerTileContainer: {
         marginTop: 10,
@@ -152,8 +156,8 @@ const styles = StyleSheet.create({
         marginTop: 30,
     },
     dashboardTrackerStats: {
-        borderRadius: 6,
-        backgroundColor: constants.backgroundDark1,
+        borderRadius: 12,
+        backgroundColor: constants.primaryDark1,
         padding: 20,
         margin: 20,
         flexDirection: 'row',
@@ -162,11 +166,18 @@ const styles = StyleSheet.create({
     dashboardStat: {
         fontFamily: 'monospace',
         fontSize: 18,
-        textAlign: 'center'
+        textAlign: 'center',
+        color: 'white'
     },
     statHeading: {
         fontWeight: 'bold',
-        textAlign: 'center'
+        textAlign: 'center',
+        color: 'white'
+    },
+    newRecordFieldset: {
+        padding: 20,
+        borderRadius: 10,
+        margin: 20,
     }
 });
 

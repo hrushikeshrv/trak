@@ -2,7 +2,14 @@ export const formatDate = date => {
     if (typeof date === 'string') return date;
     const words = date.toString().split(' ');
     let time = words[4].split(':');
-    return `${time[0]}:${time[1]} on ${words[0]}, ${words[1]} ${words[2]} ${words[3]}`;
+    if (parseInt(time[0]) > 12) {
+        time[0] = parseInt(time[0]) - 12;
+        time[1] += ' PM'
+    }
+    else {
+        time[1] += ' AM'
+    }
+    return `${words[0]}, ${words[1]} ${words[2]} ${words[3]}, ${time[0]}:${time[1]}`;
 }
 
 export const transformData = records => {
