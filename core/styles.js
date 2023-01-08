@@ -55,6 +55,7 @@ const styles = StyleSheet.create({
         color: 'black',
         borderColor: constants.primaryDark1,
         borderWidth: 3,
+        borderRadius: 5,
         padding: 15,
         marginBottom: 20,
         marginLeft: 5,
@@ -129,7 +130,6 @@ const styles = StyleSheet.create({
     heading: {
         fontWeight: 'bold',
         fontSize: 30,
-        fontFamily: 'AlfaSlabOne'
     },
     heading2: {
         fontWeight: 'bold',

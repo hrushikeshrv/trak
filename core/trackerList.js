@@ -58,7 +58,7 @@ class TrackerList extends React.Component {
                     >
                         <View style={styles.centeredRow}>
                             <Ionicons name='add-outline' size={20} color='black'></Ionicons>
-                            <Text style={{ fontSize: 20 }}>Add Record</Text>
+                            <Text style={{ fontSize: 14 }}>Add Record</Text>
                         </View>
                     </Pressable>
                     <Pressable
@@ -67,7 +67,7 @@ class TrackerList extends React.Component {
                     >
                         <View style={styles.centeredRow}>
                             <Ionicons name='trending-up-sharp' size={20} color='black' style={{ marginRight: 5 }}></Ionicons>
-                            <Text style={{ fontSize: 20 }}>New Tracker</Text>
+                            <Text style={{ fontSize: 14 }}>New Tracker</Text>
                         </View>
                     </Pressable>
                 </View>
