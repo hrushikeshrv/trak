@@ -6,6 +6,7 @@ import Ionicons from '@expo/vector-icons/Ionicons';
 import Dashboard from "./dashboard";
 import Settings from "./settings/settings";
 import HomeStackNavigation from "./homeStackNavigation";
+import SettingsStackNavigation from "./settingsStackNavigation";
 
 const Tab = createBottomTabNavigator();
 
@@ -35,7 +36,7 @@ export default function HomeTabNavigation() {
                 ></Tab.Screen>
                 <Tab.Screen
                     name="Settings"
-                    component={Settings}
+                    component={SettingsStackNavigation}
                 ></Tab.Screen>
             </Tab.Navigator>
         </NavigationContainer>

@@ -18,6 +18,12 @@ export const constants = {
     errorColor: '#F44336',
     errorDark1: '#E53935',
     errorDark2: '#D32F2F',
+
+    warningLight2: '#FFF9C4',
+    warningLight1: '#FFEB3B',
+    warningColor: '#FDD835',
+    warningDark1: '#FBC02D',
+    warningDark2: '#F9A825'
 }
 
 const styles = StyleSheet.create({
@@ -178,6 +184,13 @@ const styles = StyleSheet.create({
         padding: 20,
         borderRadius: 10,
         margin: 20,
+    },
+    warningContainer: {
+        padding: 20,
+        borderRadius: 8,
+        backgroundColor: constants.warningLight2,
+        borderWidth: 1,
+        borderColor: constants.warningDark2,
     }
 });
 

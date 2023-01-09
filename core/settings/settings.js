@@ -1,10 +1,11 @@
 import React from 'react';
 import { Text, ScrollView, View, Pressable, Modal, FlatList } from 'react-native';
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import { useNavigation } from "@react-navigation/native";
 import styles from '../styles'
 
 
-export default class Settings extends React.Component {
+class Settings extends React.Component {
     state = {
         isReady: false,
         defaultTracker1: null,
@@ -111,6 +112,7 @@ export default class Settings extends React.Component {
                 <View><Text>Loading...</Text></View>
             </ScrollView>
         )
+        const { navigation } = this.props;
         return (
             <ScrollView style={styles.screenContainer}>
                 <Modal
@@ -145,7 +147,7 @@ export default class Settings extends React.Component {
                 <Text style={styles.settingsHeader}>Your data</Text>
                 <Pressable
                     style={styles.settingsRow}
-                    onPress={() => {}}
+                    onPress={() => {navigation.navigate('ImportData')}}
                 >
                     <Text style={{ fontWeight: 'bold' }}>Import Data</Text>
                 </Pressable>
@@ -154,6 +156,12 @@ export default class Settings extends React.Component {
                     onPress={() => {}}
                 >
                     <Text style={{ fontWeight: 'bold' }}>Export Data</Text>
+                </Pressable>
+                <Pressable
+                    style={styles.settingsRow}
+                    onPress={() => {}}
+                >
+                    <Text style={{ fontWeight: 'bold' }}>Clean Tracker Data</Text>
                 </Pressable>
                 <Pressable
                     style={styles.settingsRow}
@@ -194,4 +202,9 @@ export default class Settings extends React.Component {
             </ScrollView>
         )
     }
+}
+
+export default function() {
+    const navigation = useNavigation();
+    return <Settings navigation={navigation}></Settings>
 }
