@@ -28,7 +28,7 @@ export default function TrackerChart(props) {
                 containerComponent={
                     <VictoryVoronoiContainer
                         voronoiDimension="x"
-                        labels={ ({ datum }) => `${datum.y}\n${formatDate(new Date(datum.x))}` }
+                        labels={ ({ datum }) => `${datum.y}\n${formatDate(new Date(datum.date))}` }
                         labelComponent={<VictoryTooltip constrainToVisibleArea></VictoryTooltip>}
                     />
                 }

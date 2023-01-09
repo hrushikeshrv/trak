@@ -15,15 +15,19 @@ export const formatDate = date => {
 export const transformData = records => {
     const data = [];
     for (let i = 0; i < records.x.length; i++) {
-        data.push({x: records.x[i], y: records.y[i]});
+        data.push({date: records.x[i], y: records.y[i]});
     }
     data.sort((a, b) => {
-        const d1 = new Date(a.x);
-        const d2 = new Date(b.x);
+        const d1 = new Date(a.date);
+        const d2 = new Date(b.date);
         if (d1 < d2) return -1;
         if (d1 > d2) return 1;
         return 0;
     });
+    for (let i = 0; i < data.length; i++) {
+        data[i].x = i;
+    }
+    console.log(data);
     return data;
 }
 
