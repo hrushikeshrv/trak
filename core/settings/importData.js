@@ -20,14 +20,14 @@ class ImportData extends React.Component {
         DocumentPicker.getDocumentAsync({ type: 'text/csv' })
             .then(result => {
                 if (result.type === 'cancel') return;
-                this.parseData(result.file);
+                console.log('selected file ', result);
+                this.parseData(result.uri);
             });
     }
 
-    parseData = (file) => {
+    parseData = (uri) => {
         try {
-            console.log('Parsing file ', file.file);
-            this.setState({ trackerData: parseCSVFile(file) })
+            this.setState({ trackerData: parseCSVFile(uri) })
         }
         catch {
             this.setState({ parsingError: true })
@@ -53,7 +53,7 @@ class ImportData extends React.Component {
                 </Text>
                 {this.state.parsingError ?
                     <Text style={[styles.marginTop, styles.errorContainer]}>
-                        The file you selected is not in the correct format. Please try again with another file.
+                        An error occurred while reading the file you selected. Please try again with another file (make sure the file is present locally on your device).
                     </Text>
                     : null
                 }

@@ -1,4 +1,5 @@
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import * as FileSystem from 'expo-file-system';
 
 export const formatDate = date => {
     if (typeof date === 'string') return date;
@@ -97,6 +98,7 @@ export const createTracker = async (name, records = null) => {
     return await AsyncStorage.setItem('Trackers', JSON.stringify(trackers))
 }
 
-export const parseCSVFile = async file => {
-
+export const parseCSVFile = async uri => {
+    const fileContents = FileSystem.readAsStringAsync(uri);
+    console.log(fileContents);
 }
