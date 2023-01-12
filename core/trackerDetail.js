@@ -1,6 +1,5 @@
 import React from 'react';
 import { Text, View, ScrollView, Pressable, Alert, TextInput } from 'react-native';
-import { useNavigation } from '@react-navigation/native';
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import TrackerChart from "./trackerChart";
 import { formatDate } from "./utils";
@@ -105,6 +104,7 @@ class TrackerDetail extends React.Component{
                             if (isNaN(text) || isNaN(parseFloat(text))) return;
                             this.setState({ newReading: text })
                         }}
+                        value={this.state.newReading}
                     ></TextInput>
                     <Pressable
                         onPress={this.toggleDatePicker}

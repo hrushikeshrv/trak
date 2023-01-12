@@ -12,7 +12,7 @@ export const formatDate = date => {
     else {
         time[1] += ' AM'
     }
-    return `${words[0]}, ${words[1]} ${words[2]} ${words[3]}, ${time[0]}:${time[1]}`;
+    return `${words[1]} ${words[2]} ${words[3]}, ${time[0]}:${time[1]}`;
 }
 
 export const transformData = records => {
@@ -28,16 +28,15 @@ export const transformData = records => {
         return 0;
     });
     for (let i = 0; i < data.length; i++) {
-        data[i].x = i;
+        data[i].x = i+1;
     }
-    console.log(data);
     return data;
 }
 
 export const getRegressionLine = records => {
     let dateIndices;
     const n = records.x.length;
-    if (n === 0) return [0, 0];
+    if (n <= 1) return [0, 0];
 
     if (typeof records.x[0] !== 'number') {
         dateIndices = [0];
@@ -71,6 +70,26 @@ export const getRecordVariance = records => {
         variance += (records.y[i] - mean) ** 2;
     }
     return roundNumber(Math.sqrt(variance) / records.y.length, 3);
+}
+
+export const getRecordDelta = records => {
+    if (records.y.length <= 1) return 0;
+    let minDate = new Date(records.x[0]);
+    let maxDate = new Date(records.x[0]);
+    let max = 0;
+    let min = 0;
+    for (let i = 0; i < records.x.length; i++) {
+        const d = new Date(records.x[i]);
+        if (d >= maxDate) {
+            maxDate = d;
+            max = records.y[i];
+        }
+        if (d <= minDate) {
+            minDate = d;
+            min = records.y[i];
+        }
+    }
+    return roundNumber(max - min, 2);
 }
 
 export const roundNumber = (n, places) => {
