@@ -13,7 +13,7 @@ export const constants = {
     primaryDark1: '#1D262A',
     primaryDark2: '#13191C',
 
-    errorLight2: '#E57373',
+    errorLight2: '#e5b1b1',
     errorLight1: '#EF5350',
     errorColor: '#F44336',
     errorDark1: '#E53935',
@@ -191,6 +191,13 @@ const styles = StyleSheet.create({
         backgroundColor: constants.warningLight2,
         borderWidth: 1,
         borderColor: constants.warningDark2,
+    },
+    errorContainer: {
+        padding: 20,
+        borderRadius: 8,
+        backgroundColor: constants.errorLight2,
+        borderWidth: 1,
+        borderColor: constants.errorDark2
     }
 });
 

@@ -1,3 +1,5 @@
+import AsyncStorage from "@react-native-async-storage/async-storage";
+
 export const formatDate = date => {
     if (typeof date === 'string') return date;
     const words = date.toString().split(' ');
@@ -73,4 +75,28 @@ export const getRecordVariance = records => {
 export const roundNumber = (n, places) => {
     const factor = 10 ** places;
     return Math.round(n * factor) / factor;
+}
+
+export const createTracker = async (name, records = null) => {
+    const tracker = {
+        name: name,
+        graphType: 'line',
+        records: {
+            x: [],
+            y: []
+        }
+    }
+    if (records) tracker.records = records;
+
+    let maxId = 0;
+    let trackers = JSON.parse(await AsyncStorage.getItem('Trackers'));
+    if (!trackers) trackers = [];
+    trackers.forEach(t => {if (t.id > maxId) maxId = t.id});
+    tracker.id = maxId + 1;
+    trackers.push(tracker);
+    return await AsyncStorage.setItem('Trackers', JSON.stringify(trackers))
+}
+
+export const parseCSVFile = async file => {
+
 }

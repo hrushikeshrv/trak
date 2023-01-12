@@ -5,6 +5,8 @@ import Ionicons from "@expo/vector-icons/Ionicons";
 import { useNavigation } from '@react-navigation/native';
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
+import {createTracker} from "./utils";
+
 
 class NewTracker extends React.Component {
     state = {
@@ -15,29 +17,12 @@ class NewTracker extends React.Component {
     }
 
     createTracker = async () => {
-        const tracker = {
-            name: this.state.trackerName,
-            graphType: 'line',
-            records: {
-                x: [],
-                y: []
-            }
-        }
-        let maxId = 0;
-        AsyncStorage.getItem('Trackers')
-            .then(trackers => {
-                trackers = JSON.parse(trackers);
-                if (!trackers) trackers = [];
-                trackers.forEach(t => {if (t.id > maxId) maxId = t.id});
-                tracker.id = maxId + 1;
-                trackers.push(tracker);
-                AsyncStorage.setItem('Trackers', JSON.stringify(trackers))
-                    .then(() => {
-                        const { navigation } = this.props;
-                        navigation.navigate('ListTrackers');
-                    })
-                    .catch(err => {console.error(err)})
+        createTracker(this.state.trackerName)
+            .then(() => {
+                const { navigation } = this.props;
+                navigation.navigate('ListTrackers');
             })
+            .catch(err => {console.error(err)})
     }
     render() {
         return (

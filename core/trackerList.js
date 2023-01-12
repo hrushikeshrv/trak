@@ -87,7 +87,7 @@ class TrackerList extends React.Component {
                         }
                     }
                 >
-                    {this.state.trackers.map(this.renderTrackerTile)}
+                    {this.state.trackers ? this.state.trackers.map(this.renderTrackerTile) : null}
                 </ScrollView>
             </View>
         )

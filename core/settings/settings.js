@@ -22,7 +22,7 @@ class Settings extends React.Component {
 
     getCurrentSettingsAsync = async () => {
         let settings = JSON.parse(await AsyncStorage.getItem('Settings'));
-        if (Object.keys(settings).length === 0) {
+        if (!settings || Object.keys(settings).length === 0) {
             AsyncStorage.setItem('Settings', JSON.stringify({}))
                 .then(() => {
                     settings = {}
@@ -31,6 +31,7 @@ class Settings extends React.Component {
         AsyncStorage.getItem('Trackers')
             .then(trackers => {
                 trackers = JSON.parse(trackers);
+                if (!trackers) return;
                 for (let i = 0; i < trackers.length; i++) {
                     if (trackers[i].id === settings.defaultTracker1)
                         this.setState({ defaultTracker1: trackers[i] });
