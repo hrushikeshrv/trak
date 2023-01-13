@@ -198,6 +198,12 @@ const styles = StyleSheet.create({
         backgroundColor: constants.errorLight2,
         borderWidth: 1,
         borderColor: constants.errorDark2
+    },
+    graphNotReadyContainer: {
+        padding: 20,
+        flex: 1,
+        alignItems: 'center',
+        justifyContent: 'center',
     }
 });
 

@@ -86,7 +86,7 @@ class TrackerDetail extends React.Component{
                     isVisible={this.state.datePickerVisible}
                     mode="datetime"
                     onConfirm={date => {
-                        this.setState({ newDate: date});
+                        this.setState({ newDate: date });
                         this.toggleDatePicker();
                     }}
                     onCancel={this.toggleDatePicker}

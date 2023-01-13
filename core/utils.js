@@ -118,6 +118,22 @@ export const createTracker = async (name, records = null) => {
 }
 
 export const parseCSVFile = async uri => {
-    const fileContents = FileSystem.readAsStringAsync(uri);
-    console.log(fileContents);
+    const fileContents = await FileSystem.readAsStringAsync(uri);
+    const lines = fileContents.split('\n');
+    lines.sort((a, b) => {
+        if (a < b) return -1;
+        if (a > b) return 1;
+        return 0;
+    })
+
+    const records = {x: [], y: []}
+    for (let line of lines) {
+        line = line.split(',');
+        const d = new Date(line[0]);
+        const val = parseFloat(line[1]);
+        if (isNaN(val) || isNaN(d.valueOf())) continue;
+        records.x.push(d);
+        records.y.push(val);
+    }
+    return records;
 }

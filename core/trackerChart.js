@@ -3,9 +3,11 @@ import {
     VictoryAxis,
     VictoryChart,
     VictoryLine,
+    VictoryPie,
     VictoryTheme,
     VictoryTooltip,
-    VictoryVoronoiContainer
+    VictoryVoronoiContainer,
+    VictoryLabel
 } from "victory-native";
 import {transformData, formatDate, getRecordVariance, getRegressionLine, getRecordDelta} from "./utils";
 import styles from "./styles";
@@ -17,13 +19,49 @@ function getTickFormat(tick) {
     return tick.split('T')[0].slice(2);
 }
 
-export default function TrackerChart(props) {
-    const data = transformData(props.tracker.records);
-    const variance = getRecordVariance(props.tracker.records);
-    const [constant, slope] = getRegressionLine(props.tracker.records);
-    const delta = getRecordDelta(props.tracker.records);
-    return (
-        <View>
+export default class TrackerChart extends React.Component {
+    state = {
+        isReady: false,
+    }
+
+    componentDidMount() {
+        const data = transformData(this.props.tracker.records);
+        const variance = getRecordVariance(this.props.tracker.records);
+        const [constant, slope] = getRegressionLine(this.props.tracker.records);
+        const delta = getRecordDelta(this.props.tracker.records);
+        this.setState({ data, variance, slope, constant, delta });
+        setTimeout(() => {this.setState({ isReady: true })}, 150);
+    }
+
+    loadingScreenComponent = () => {
+        return (
+            <View>
+                <VictoryPie
+                    data={[
+                        { x: 1, y: 5 },
+                        { x: 2, y: 4 },
+                    ]}
+                    innerRadius={70}
+                    width={350}
+                    height={350}
+                    labelRadius={0}
+                    style={{ labels: { fontSize: 20, fill: "white" } }}
+                    labelComponent={
+                        <VictoryLabel
+                            textAnchor="middle"
+                            style={{ fontSize: 16, color: 'black', fontFamily: 'monospace' }}
+                            x={175} y={175}
+                            text="Loading..."
+                        />
+                    }
+                />
+            </View>
+        )
+    }
+
+    chartComponent = () => {
+        const data = this.state.data;
+        return (
             <VictoryChart
                 theme={VictoryTheme.material}
                 domainPadding={{x: [10, 20], y: [10, 20]}}
@@ -37,7 +75,7 @@ export default function TrackerChart(props) {
             >
                 <VictoryLine
                     style={{
-                        data: { stroke: props.tracker.stroke || "#F44336" , strokeWidth: 3 },
+                        data: { stroke: this.props.tracker.stroke || "#F44336" , strokeWidth: 3 },
                         parent: {border: "1px solid #ccc"}
                     }}
                     data={data}
@@ -46,40 +84,52 @@ export default function TrackerChart(props) {
                 </VictoryLine>
                 <VictoryAxis dependentAxis></VictoryAxis>
                 <VictoryAxis
-                    tickValues={props.tracker.records.x.sort()}
+                    tickValues={this.props.tracker.records.x.sort()}
                     fixLabelOverlap
                     tickFormat={t => (getTickFormat(t))}
                 ></VictoryAxis>
             </VictoryChart>
-            <View style={[styles.dashboardTrackerStats]}>
-                <View>
-                    <View style={styles.centeredRow}>
-                        <Ionicons
-                            name={delta > 0 ? 'arrow-up' : (delta === 0 ? 'reorder-two' : 'arrow-down')}
-                            size={12}
-                            color='#FDD835'
-                        ></Ionicons>
-                        <Text style={styles.dashboardStat}>{delta}</Text>
+        )
+    }
+
+    render() {
+        const variance = this.state.variance;
+        const constant = this.state.constant;
+        const slope = this.state.slope;
+        const delta = this.state.delta;
+        return (
+            <View>
+                { this.state.isReady ? this.chartComponent() : this.loadingScreenComponent() }
+                <View style={[styles.dashboardTrackerStats]}>
+                    <View>
+                        <View style={styles.centeredRow}>
+                            <Ionicons
+                                name={delta > 0 ? 'arrow-up' : (delta === 0 ? 'reorder-two' : 'arrow-down')}
+                                size={12}
+                                color='#FDD835'
+                            ></Ionicons>
+                            <Text style={styles.dashboardStat}>{delta}</Text>
+                        </View>
+                        <Text style={styles.statHeading}>Delta</Text>
                     </View>
-                    <Text style={styles.statHeading}>Delta</Text>
-                </View>
-                <View>
-                    <Text style={styles.dashboardStat}>{variance}</Text>
-                    <Text style={styles.statHeading}>Variance</Text>
-                </View>
-                <View>
-                    <View style={styles.centeredRow}>
-                        <Ionicons
-                            name={slope > 0 ? 'arrow-up' : (slope === 0 ? 'reorder-two' : 'arrow-down')}
-                            size={12}
-                            color='#FDD835'
-                        ></Ionicons>
-                        <Text style={styles.dashboardStat}>{slope}</Text>
-                        <Text style={{ color: 'white' }}>/day</Text>
+                    <View>
+                        <Text style={styles.dashboardStat}>{variance}</Text>
+                        <Text style={styles.statHeading}>Variance</Text>
                     </View>
-                    <Text style={styles.statHeading}>Trend</Text>
+                    <View>
+                        <View style={styles.centeredRow}>
+                            <Ionicons
+                                name={slope > 0 ? 'arrow-up' : (slope === 0 ? 'reorder-two' : 'arrow-down')}
+                                size={12}
+                                color='#FDD835'
+                            ></Ionicons>
+                            <Text style={styles.dashboardStat}>{slope}</Text>
+                            <Text style={{ color: 'white' }}>/day</Text>
+                        </View>
+                        <Text style={styles.statHeading}>Trend</Text>
+                    </View>
                 </View>
             </View>
-        </View>
-    )
+        )
+    }
 }

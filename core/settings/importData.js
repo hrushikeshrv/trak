@@ -16,26 +16,27 @@ class ImportData extends React.Component {
         parsingError: false,
     }
 
-    getData = () => {
+    getData = async () => {
         DocumentPicker.getDocumentAsync({ type: 'text/csv' })
             .then(result => {
                 if (result.type === 'cancel') return;
-                console.log('selected file ', result);
                 this.parseData(result.uri);
             });
     }
 
-    parseData = (uri) => {
+    parseData = async (uri) => {
         try {
-            this.setState({ trackerData: parseCSVFile(uri) })
+            const data = await parseCSVFile(uri);
+            this.setState({ trackerData: data })
         }
         catch {
             this.setState({ parsingError: true })
         }
     }
 
-    createTracker = () => {
-        if (!this.state.newTrackerName || !this.state.trackerData) return;
+    createTracker = async () => {
+        if (!this.state.newTrackerName) return;
+        if (!this.state.trackerData) await this.getData();
         const { navigation } = this.props;
         createTracker(this.state.newTrackerName, this.state.trackerData)
             .then(() => {
@@ -48,8 +49,8 @@ class ImportData extends React.Component {
             <ScrollView style={styles.screenContainer}>
                 <Text style={styles.heading}>Import data</Text>
                 <Text style={[styles.marginTop, styles.warningContainer]}>
-                    Choose a .csv file with two columns - one corresponding to the date/date-time
-                    of the record and one corresponding to the record.
+                    Choose a .csv file with two columns - date and value. The first column should
+                    contain the date, the second column should contain the value.
                 </Text>
                 {this.state.parsingError ?
                     <Text style={[styles.marginTop, styles.errorContainer]}>
@@ -65,6 +66,13 @@ class ImportData extends React.Component {
                         <Text>Choose file</Text>
                     </Pressable>
                 </View>
+                {
+                    this.state.trackerData ?
+                        <View>
+                            <Text style={{ textAlign: 'center' }}>File read successfully!</Text>
+                        </View>
+                        : null
+                }
                 <View
                     style={[styles.padding20]}
                 >
@@ -79,6 +87,7 @@ class ImportData extends React.Component {
                     <Pressable
                         style={[styles.simpleButton, styles.centeredRow]}
                         onPress={this.createTracker}
+                        disabled={!(this.state.newTrackerName && this.state.trackerData)}
                     >
                         <Ionicons name='trending-up-sharp' size={20} color='white' style={{ marginRight: 8 }}></Ionicons>
                         <Text style={{ color: 'white' }}>Create Tracker</Text>
