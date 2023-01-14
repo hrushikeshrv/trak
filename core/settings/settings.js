@@ -2,7 +2,7 @@ import React from 'react';
 import { Text, ScrollView, View, Pressable, Modal, FlatList } from 'react-native';
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useNavigation } from "@react-navigation/native";
-import styles from '../styles'
+import styles from '../styles';
 
 
 class Settings extends React.Component {
@@ -13,6 +13,7 @@ class Settings extends React.Component {
         trackers: null,
         trackerPickingModalVisible: false,
         settingTrackerNumber: null,
+        privacyPolicyModalVisible: false,
     }
 
     componentDidMount() {
@@ -49,6 +50,12 @@ class Settings extends React.Component {
         if (settingTrackerNumber) {
             this.setState({settingTrackerNumber});
         }
+    }
+
+    togglePrivacyPolicyModal = () => {
+        this.setState(prevState => ({
+            privacyPolicyModalVisible: !prevState.privacyPolicyModalVisible
+        }));
     }
 
     DefaultTrackerRow = ({ tracker, id }) => {
@@ -141,6 +148,39 @@ class Settings extends React.Component {
                         ><Text style={{ color: 'white', textAlign: 'center' }}>Done</Text></Pressable>
                     </View>
                 </Modal>
+                <Modal
+                    animationType='slide'
+                    transparent={true}
+                    visible={this.state.privacyPolicyModalVisible}
+                    onRequestClose={() => {
+                        this.togglePrivacyPolicyModal();
+                    }}
+                >
+                    <View
+                        style={styles.screenContainer}
+                    >
+                        <Text style={styles.heading}>Privacy Policy</Text>
+
+                        <Text style={styles.marginTop}>
+                            TRAK collects no personal information whatsoever. All information
+                            you enter in the app is stored locally and is never shared outside
+                            the device.
+                        </Text>
+
+                        <Text style={styles.marginTop}>
+                            TRAK does not send your data to any server, service, or third-party provider.
+                            Only you can choose to export your data from the app, in which case the app
+                            will generate a .JSON file containing all of your data. This file will be
+                            generated locally and be provided to you to store on-device or share.
+                        </Text>
+
+                        <Pressable
+                            style={[styles.simpleButton, styles.marginTop]}
+                            onPress={this.togglePrivacyPolicyModal}
+                        ><Text style={{ color: 'white', textAlign: 'center' }}>Accept</Text></Pressable>
+                    </View>
+                </Modal>
+
                 <Text style={[styles.settingsHeader, { marginTop: 10 }]}>Set your default trackers</Text>
                 <this.DefaultTrackerRow tracker={this.state.defaultTracker1} id={1}></this.DefaultTrackerRow>
                 <this.DefaultTrackerRow tracker={this.state.defaultTracker2} id={2}></this.DefaultTrackerRow>
@@ -160,7 +200,7 @@ class Settings extends React.Component {
                 </Pressable>
                 <Pressable
                     style={styles.settingsRow}
-                    onPress={() => {}}
+                    onPress={this.togglePrivacyPolicyModal}
                 >
                     <Text style={{ fontWeight: 'bold' }}>Privacy Policy</Text>
                 </Pressable>
