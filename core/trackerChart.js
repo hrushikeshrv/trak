@@ -30,6 +30,8 @@ export default class TrackerChart extends React.Component {
         const [constant, slope] = getRegressionLine(this.props.tracker.records);
         const delta = getRecordDelta(this.props.tracker.records);
         this.setState({ data, variance, slope, constant, delta });
+        // Delay setting isReady so navigation to the screen can complete before
+        // the chart tries to render.
         setTimeout(() => {this.setState({ isReady: true })}, 150);
     }
 
@@ -69,7 +71,13 @@ export default class TrackerChart extends React.Component {
                     <VictoryVoronoiContainer
                         voronoiDimension="x"
                         labels={ ({ datum }) => `${datum.y}\n${formatDate(new Date(datum.date))}` }
-                        labelComponent={<VictoryTooltip constrainToVisibleArea></VictoryTooltip>}
+                        labelComponent={
+                            <VictoryTooltip
+                                constrainToVisibleArea
+                                style={{ fill: 'white', fontWeight: 'bold' }}
+                                flyoutStyle={{ fill: '#13191C' }}
+                            ></VictoryTooltip>
+                        }
                     />
                 }
             >
@@ -94,7 +102,6 @@ export default class TrackerChart extends React.Component {
 
     render() {
         const variance = this.state.variance;
-        const constant = this.state.constant;
         const slope = this.state.slope;
         const delta = this.state.delta;
         return (

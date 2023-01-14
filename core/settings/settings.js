@@ -162,12 +162,6 @@ class Settings extends React.Component {
                     style={styles.settingsRow}
                     onPress={() => {}}
                 >
-                    <Text style={{ fontWeight: 'bold' }}>Clean Tracker Data</Text>
-                </Pressable>
-                <Pressable
-                    style={styles.settingsRow}
-                    onPress={() => {}}
-                >
                     <Text style={{ fontWeight: 'bold' }}>Privacy Policy</Text>
                 </Pressable>
 

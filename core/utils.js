@@ -94,6 +94,8 @@ export const getRecordDelta = records => {
 
 export const roundNumber = (n, places) => {
     const factor = 10 ** places;
+    // Very basic rounding. Misses some edge cases, but
+    // that's okay for this application.
     return Math.round(n * factor) / factor;
 }
 
