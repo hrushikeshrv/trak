@@ -1,6 +1,7 @@
 import React from 'react';
 import { Text, ScrollView, View, Pressable, Modal, FlatList } from 'react-native';
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import * as FileSystem from 'expo-file-system';
 import { useNavigation } from "@react-navigation/native";
 import styles from '../styles';
 
@@ -100,6 +101,24 @@ class Settings extends React.Component {
         AsyncStorage.setItem('Settings', JSON.stringify(settings));
     }
 
+    exportData = async () => {
+        // ! Android specific code
+        const { StorageAccessFramework } = FileSystem;
+        const permissions = await  StorageAccessFramework.requestDirectoryPermissionsAsync();
+        if (permissions.granted) {
+            const directoryURI = permissions.directoryUri;
+            const data = JSON.stringify(this.state.trackers);
+            await StorageAccessFramework.createFileAsync(directoryURI, 'TRAKdata.json', 'application.json')
+                .then(async fileURI => {
+                    await FileSystem.writeAsStringAsync(fileURI, data, { encoding: FileSystem.EncodingType.UTF8})
+                })
+                .catch(e => console.error(e))
+        }
+        else {
+            alert('TRAK needs file system permission to export data.')
+        }
+    }
+
     renderTrackerRow = ({ item }) => {
         return (
             <Pressable
@@ -194,7 +213,7 @@ class Settings extends React.Component {
                 </Pressable>
                 <Pressable
                     style={styles.settingsRow}
-                    onPress={() => {}}
+                    onPress={this.exportData}
                 >
                     <Text style={{ fontWeight: 'bold' }}>Export Data</Text>
                 </Pressable>
