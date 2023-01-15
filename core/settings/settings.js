@@ -115,7 +115,7 @@ class Settings extends React.Component {
                 .catch(e => console.error(e))
         }
         else {
-            alert('TRAK needs file system permission to export data.')
+            alert('TRAK failed to export data :/');
         }
     }
 
@@ -227,7 +227,7 @@ class Settings extends React.Component {
                 <Text style={styles.settingsHeader}>Notifications</Text>
                 <Pressable
                     style={styles.settingsRow}
-                    onPress={() => {}}
+                    onPress={() => {navigation.navigate('Notifications')}}
                 >
                     <Text style={{ fontWeight: 'bold' }}>Manage Notifications</Text>
                 </Pressable>
