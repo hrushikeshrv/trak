@@ -1,9 +1,10 @@
 import React from 'react';
-import { Text, ScrollView, View, Pressable, Modal, FlatList } from 'react-native';
+import { Text, ScrollView, View, Pressable, Modal, FlatList, Linking } from 'react-native';
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import * as FileSystem from 'expo-file-system';
 import { useNavigation } from "@react-navigation/native";
 import styles from '../styles';
+import TOS from "./tos";
 
 
 class Settings extends React.Component {
@@ -15,6 +16,7 @@ class Settings extends React.Component {
         trackerPickingModalVisible: false,
         settingTrackerNumber: null,
         privacyPolicyModalVisible: false,
+        tosModalVisible: false,
     }
 
     componentDidMount() {
@@ -56,6 +58,12 @@ class Settings extends React.Component {
     togglePrivacyPolicyModal = () => {
         this.setState(prevState => ({
             privacyPolicyModalVisible: !prevState.privacyPolicyModalVisible
+        }));
+    }
+
+    toggleToSModal = () => {
+        this.setState(prevState => ({
+            tosModalVisible: !prevState.tosModalVisible
         }));
     }
 
@@ -200,6 +208,21 @@ class Settings extends React.Component {
                     </View>
                 </Modal>
 
+                <Modal
+                    animationType='slide'
+                    transparent={true}
+                    visible={this.state.tosModalVisible}
+                    onRequestClose={() => {
+                        this.toggleToSModal();
+                    }}
+                >
+                    <TOS></TOS>
+                    <Pressable
+                        style={[styles.simpleButton, styles.marginTop]}
+                        onPress={this.toggleToSModal}
+                    ><Text style={{ color: 'white', textAlign: 'center' }}>Accept</Text></Pressable>
+                </Modal>
+
                 <Text style={[styles.settingsHeader, { marginTop: 10 }]}>Set your default trackers</Text>
                 <this.DefaultTrackerRow tracker={this.state.defaultTracker1} id={1}></this.DefaultTrackerRow>
                 <this.DefaultTrackerRow tracker={this.state.defaultTracker2} id={2}></this.DefaultTrackerRow>
@@ -235,19 +258,19 @@ class Settings extends React.Component {
                 <Text style={styles.settingsHeader}>Help</Text>
                 <Pressable
                     style={styles.settingsRow}
-                    onPress={() => {}}
+                    onPress={() => {Linking.openURL('mailto:hrushikeshrv@gmail.com?subject=Bug Report For TRAK')}}
                 >
                     <Text style={{ fontWeight: 'bold' }}>Report an issue</Text>
                 </Pressable>
                 <Pressable
                     style={styles.settingsRow}
-                    onPress={() => {}}
+                    onPress={() => {Linking.openURL('mailto:hrushikeshrv@gmail.com?subject=TRAK Support')}}
                 >
                     <Text style={{ fontWeight: 'bold' }}>Contact Developers</Text>
                 </Pressable>
                 <Pressable
                     style={styles.settingsRow}
-                    onPress={() => {}}
+                    onPress={this.toggleToSModal}
                 >
                     <Text style={{ fontWeight: 'bold' }}>Terms of service</Text>
                 </Pressable>
