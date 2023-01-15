@@ -63,40 +63,67 @@ export default class TrackerChart extends React.Component {
 
     chartComponent = () => {
         const data = this.state.data;
+        const largeDataSet = data.length >= 100;
+        const interval = Math.ceil(data.length / 50);
+        const sampledData = data.filter((d, i) => ((i % interval) === 0));
         return (
-            <VictoryChart
-                theme={VictoryTheme.material}
-                domainPadding={{x: [10, 20], y: [10, 20]}}
-                containerComponent={
-                    <VictoryVoronoiContainer
-                        voronoiDimension="x"
-                        labels={ ({ datum }) => `${datum.y}\n${formatDate(new Date(datum.date))}` }
-                        labelComponent={
-                            <VictoryTooltip
-                                constrainToVisibleArea
-                                style={{ fill: 'white', fontWeight: 'bold' }}
-                                flyoutStyle={{ fill: '#13191C' }}
-                            ></VictoryTooltip>
-                        }
-                    />
-                }
-            >
-                <VictoryLine
-                    style={{
-                        data: { stroke: this.props.tracker.stroke || "#F44336" , strokeWidth: 3 },
-                        parent: {border: "1px solid #ccc"}
-                    }}
-                    data={data}
-                    interpolation='monotoneX'
+            <View>
+                <VictoryChart
+                    theme={VictoryTheme.material}
+                    domainPadding={{x: [10, 20], y: [10, 20]}}
+                    containerComponent={
+                        <VictoryVoronoiContainer
+                            voronoiDimension="x"
+                            labels={ ({ datum }) => `${datum.y}\n${formatDate(new Date(datum.date))}` }
+                            labelComponent={
+                                <VictoryTooltip
+                                    constrainToVisibleArea
+                                    style={{ fill: 'white', fontWeight: 'bold' }}
+                                    flyoutStyle={{ fill: '#13191C' }}
+                                ></VictoryTooltip>
+                            }
+                        />
+                    }
                 >
-                </VictoryLine>
-                <VictoryAxis dependentAxis></VictoryAxis>
-                <VictoryAxis
-                    tickValues={this.props.tracker.records.x.sort()}
-                    fixLabelOverlap
-                    tickFormat={t => (getTickFormat(t))}
-                ></VictoryAxis>
-            </VictoryChart>
+                    <VictoryLine
+                        style={{
+                            data: { stroke: this.props.tracker.stroke || "#F44336" , strokeWidth: 3 },
+                            parent: {border: "1px solid #ccc"}
+                        }}
+                        data={data}
+                        interpolation={largeDataSet ? 'bundle' : 'monotoneX'}
+                    >
+                    </VictoryLine>
+                    <VictoryAxis dependentAxis></VictoryAxis>
+                    <VictoryAxis
+                        tickValues={this.props.tracker.records.x.sort()}
+                        tickCount={4}
+                        fixLabelOverlap
+                        tickFormat={t => (getTickFormat(t))}
+                    ></VictoryAxis>
+                </VictoryChart>
+                {
+                    largeDataSet
+                    ? (<VictoryChart height={140} width={370} style={{
+                            parent: {
+                                marginTop: -40,
+                                marginBottom: -40
+                            }
+                        }}>
+                        <VictoryAxis tickFormat={() => ('')}></VictoryAxis>
+                        <VictoryLine
+                            style={{
+                                data: { stroke: this.props.tracker.stroke || "#F44336" , strokeWidth: 3 },
+                                parent: {border: "1px solid #ccc"}
+                            }}
+                            data={sampledData}
+                            interpolation='monotoneX'
+                        >
+                        </VictoryLine>
+                        </VictoryChart>)
+                    : null
+                }
+            </View>
         )
     }
 
