@@ -17,7 +17,7 @@ class ImportData extends React.Component {
     }
 
     getData = async () => {
-        DocumentPicker.getDocumentAsync({ type: 'text/csv' })
+        DocumentPicker.getDocumentAsync({ type: 'text/*' })
             .then(result => {
                 if (result.type === 'cancel') return;
                 this.parseData(result.uri);

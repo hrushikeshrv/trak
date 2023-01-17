@@ -23,7 +23,8 @@
     "react-native-screens": "~3.18.0",
     "react-native-svg": "13.4.0",
     "victory-native": "^36.6.8",
-    "expo-document-picker": "~11.0.1"
+    "expo-document-picker": "~11.0.1",
+    "expo-notifications": "~0.17.0"
   },
   "devDependencies": {
     "@babel/core": "^7.12.9"
