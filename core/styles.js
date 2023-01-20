@@ -204,6 +204,12 @@ const styles = StyleSheet.create({
         flex: 1,
         alignItems: 'center',
         justifyContent: 'center',
+    },
+    trackerNotificationRow: {
+        padding: 20,
+        backgroundColor: constants.primaryDark2,
+        borderRadius: 6,
+        marginTop: 10
     }
 });
 
