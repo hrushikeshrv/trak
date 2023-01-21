@@ -1,11 +1,9 @@
 import React, { createRef } from 'react';
-import {View, Text, Platform, Pressable, ScrollView} from 'react-native';
+import {View, Text, Platform, Pressable, ScrollView, Modal} from 'react-native';
 import * as Notifications from 'expo-notifications';
-import Constants from 'expo-constants';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useNavigation } from "@react-navigation/native";
 import styles from '../styles';
-import {getPermissionsAsync} from "expo-notifications";
 
 Notifications.setNotificationHandler({
     handleNotification: async () => ({
@@ -21,6 +19,8 @@ class NotificationsScreen extends React.Component {
         notification: null,
         scheduledNotifications: {},
         trackers: [],
+        activeTracker: null,
+        notificationModalVisible: false,
     }
 
     notificationListener = createRef();
@@ -69,7 +69,13 @@ class NotificationsScreen extends React.Component {
 
     renderTrackerRow = tracker => {
         return (
-            <View style={[styles.centeredRow, styles.trackerNotificationRow]} key={tracker.id}>
+            <Pressable
+                style={[styles.centeredRow, styles.trackerNotificationRow]}
+                key={tracker.id}
+                onPress={() => {
+                    this.setState({activeTracker: tracker, notificationModalVisible: true})
+                }}
+            >
                 <Text style={{ color: 'white', marginRight: 10, fontWeight: 'bold' }}>{tracker.name} -</Text>
                 <Text style={{ color: 'white' }}>
                     {
@@ -78,14 +84,14 @@ class NotificationsScreen extends React.Component {
                             : 'No notification scheduled'
                     }
                 </Text>
-            </View>
+            </Pressable>
         )
     }
 
-    scheduleNotification = async (trackerId, trackerName, hour, minute) => {
+    scheduleNotification = async (trackerId, trackerName, hour, minute, day) => {
         if (trackerId in this.state.scheduledNotifications)
             this.cancelScheduledNotification(trackerId)
-                .then(() => this.scheduleNotification(trackerId, trackerName, hour, minute));
+                .then(() => this.scheduleNotification(trackerId, trackerName, hour, minute, day));
         const notificationId = await Notifications.scheduleNotificationAsync({
             content: {
                 title: trackerName,
@@ -94,6 +100,7 @@ class NotificationsScreen extends React.Component {
             trigger: {
                 hour: hour,
                 minute: minute,
+                day: day,
                 repeats: true
             }
         })
@@ -104,9 +111,42 @@ class NotificationsScreen extends React.Component {
 
     }
 
+    toggleNotificationModal = () => {
+        this.setState(prevState => ({notificationModalVisible: !prevState.notificationModalVisible}))
+    }
+
     render() {
         return (
             <View style={styles.screenContainer}>
+                <Modal
+                    animationType='slide'
+                    transparent={true}
+                    visible={this.state.notificationModalVisible}
+                    onRequestClose={() => {
+                        this.toggleNotificationModal();
+                    }}
+                >
+                    <View style={styles.screenContainer}>
+                        <Text style={styles.heading}>{this.state.activeTracker?.name}</Text>
+                        <Text style={styles.marginTop}>Remind me to record my {this.state.activeTracker?.name.toLowerCase()}</Text>
+                        <View style={[styles.centeredRow, styles.marginTopDouble, styles.ajc]}>
+                            <Text style={{ marginRight: 10 }}>Every</Text>
+                            <Pressable style={[styles.button, {marginRight: 10}]}>
+                                <Text>7</Text>
+                            </Pressable>
+                            <Text>days</Text>
+                        </View>
+                        <Pressable
+                            style={[styles.simpleButton, styles.marginTop]}
+                            onPress={() => {
+                                this.setState({ activeTracker: null });
+                                this.toggleNotificationModal();
+                            }}
+                        >
+                            <Text style={{ color: 'white', textAlign: 'center' }}>Done</Text>
+                        </Pressable>
+                    </View>
+                </Modal>
                 <Text style={styles.heading}>Notifications</Text>
                 <Pressable
                     onPress={async () => {
