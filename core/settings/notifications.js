@@ -1,7 +1,8 @@
 import React, { createRef } from 'react';
-import {View, Text, Platform, Pressable, ScrollView, Modal} from 'react-native';
+import {View, Text, Platform, Pressable, ScrollView, Modal, TextInput} from 'react-native';
 import * as Notifications from 'expo-notifications';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import DateTimePicker from "react-native-modal-datetime-picker";
 import { useNavigation } from "@react-navigation/native";
 import styles from '../styles';
 
@@ -21,6 +22,10 @@ class NotificationsScreen extends React.Component {
         trackers: [],
         activeTracker: null,
         notificationModalVisible: false,
+
+        days: '7',
+        time: null,
+        timePickerVisible: false,
     }
 
     notificationListener = createRef();
@@ -37,6 +42,7 @@ class NotificationsScreen extends React.Component {
         AsyncStorage.getItem('Trackers')
             .then(trackers => {
                 this.setState({ trackers: JSON.parse(trackers) })
+                console.log(this.state.scheduledNotifications);
             })
         this.notificationListener.current = Notifications.addNotificationReceivedListener(notification => {
             this.setState({notification})
@@ -88,36 +94,65 @@ class NotificationsScreen extends React.Component {
         )
     }
 
-    scheduleNotification = async (trackerId, trackerName, hour, minute, day) => {
+    getNotificationTime = () => {
+        const time = this.state.time;
+        if (!time) return 'time';
+        let hours = time.getHours();
+        if (hours < 10) hours = '0' + hours;
+        let minutes = time.getMinutes();
+        if (minutes < 10) minutes = '0' + minutes;
+        return `${hours}:${minutes}`;
+    }
+
+    scheduleNotification = async (trackerId, trackerName, hour, minute) => {
         if (trackerId in this.state.scheduledNotifications)
-            this.cancelScheduledNotification(trackerId)
-                .then(() => this.scheduleNotification(trackerId, trackerName, hour, minute, day));
+            await this.cancelScheduledNotification(trackerId);
+        const trigger = {
+            hour: hour,
+            minute: minute,
+            repeats: true,
+        }
+        console.log(trigger);
         const notificationId = await Notifications.scheduleNotificationAsync({
             content: {
                 title: trackerName,
                 body: 'Enter a record for this tracker'
             },
-            trigger: {
-                hour: hour,
-                minute: minute,
-                day: day,
-                repeats: true
-            }
+            trigger: trigger,
         })
         // Update this.state.scheduledNotifications
+        const notifs = this.state.scheduledNotifications;
+        notifs[trackerId] = notificationId;
+        this.setState({scheduledNotifications: notifs});
+        await AsyncStorage.setItem('Notifications', JSON.stringify(notifs));
     }
 
     cancelScheduledNotification = async (id) => {
-
+        return await Notifications.cancelScheduledNotificationAsync(id.toString());
     }
 
     toggleNotificationModal = () => {
         this.setState(prevState => ({notificationModalVisible: !prevState.notificationModalVisible}))
     }
 
+    toggleTimePicker = () => {
+        this.setState(prevState => ({timePickerVisible: !prevState.timePickerVisible}))
+    }
+
+    setTime = (time) => {
+        this.setState({time})
+    }
+
     render() {
         return (
             <View style={styles.screenContainer}>
+                <DateTimePicker
+                    isVisible={this.state.timePickerVisible}
+                    mode='time'
+                    onConfirm={this.setTime}
+                    onCancel={this.toggleTimePicker}
+                >
+                </DateTimePicker>
                 <Modal
                     animationType='slide'
                     transparent={true}
@@ -130,17 +165,40 @@ class NotificationsScreen extends React.Component {
                         <Text style={styles.heading}>{this.state.activeTracker?.name}</Text>
                         <Text style={styles.marginTop}>Remind me to record my {this.state.activeTracker?.name.toLowerCase()}</Text>
                         <View style={[styles.centeredRow, styles.marginTopDouble, styles.ajc]}>
-                            <Text style={{ marginRight: 10 }}>Every</Text>
-                            <Pressable style={[styles.button, {marginRight: 10}]}>
-                                <Text>7</Text>
-                            </Pressable>
-                            <Text>days</Text>
+                            <Text style={{ marginRight: 10, marginBottom: 15 }}>Every</Text>
+                            <TextInput
+                                style={[styles.button, {marginRight: 10, textAlign: 'center', fontSize: 18, fontFamily: 'monospace'}]}
+                                value={this.state.days}
+                                onChangeText={text => this.setState({days: text})}
+                                keyboardType='numeric'
+                            ></TextInput>
+                            <Text style={{marginBottom: 15}}>days</Text>
                         </View>
+                        <Pressable
+                            style={[styles.centeredRow, styles.marginTop]}
+                            onPress={this.toggleTimePicker}
+                        >
+                            <Text style={{ marginBottom: 15 }}>at </Text>
+                            <Text style={[styles.button, {marginRight: 10, textAlign: 'center', fontSize: 18, fontFamily: 'monospace'}]}>{this.getNotificationTime()}</Text>
+                        </Pressable>
                         <Pressable
                             style={[styles.simpleButton, styles.marginTop]}
                             onPress={() => {
                                 this.setState({ activeTracker: null });
-                                this.toggleNotificationModal();
+                                if (!this.state.time || !this.state.days) {
+                                    this.toggleNotificationModal();
+                                    return;
+                                }
+                                this.scheduleNotification(
+                                    this.state.activeTracker.id,
+                                    this.state.activeTracker.name,
+                                    parseInt(this.state.time.getHours()),
+                                    parseInt(this.state.time.getMinutes()),
+                                    parseInt(this.state.days)
+                                )
+                                    .then(() => {
+                                        this.toggleNotificationModal();
+                                    })
                             }}
                         >
                             <Text style={{ color: 'white', textAlign: 'center' }}>Done</Text>
