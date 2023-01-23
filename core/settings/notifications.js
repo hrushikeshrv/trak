@@ -1,5 +1,5 @@
 import React, { createRef } from 'react';
-import {View, Text, Platform, Pressable, ScrollView, Modal, TextInput} from 'react-native';
+import {View, Text, Platform, Pressable, ScrollView, Modal, TextInput, Alert} from 'react-native';
 import * as Notifications from 'expo-notifications';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import DateTimePicker from "react-native-modal-datetime-picker";
@@ -224,6 +224,18 @@ class NotificationsScreen extends React.Component {
                 <ScrollView style={styles.screenContainer}>
                     {this.state.trackers.map(this.renderTrackerRow)}
                 </ScrollView>
+                <Pressable
+                    style={[styles.simpleButton, styles.ajc, styles.centeredRow]}
+                    onPress={() => {
+                        Notifications.cancelAllScheduledNotificationsAsync()
+                            .then(() => {
+                                Alert.alert('All notifications stopped');
+                                AsyncStorage.setItem('Notifications', '{}');
+                            })
+                    }}
+                >
+                    <Text style={{ color: 'white' }}>Stop all notifications</Text>
+                </Pressable>
             </View>
         )
     }

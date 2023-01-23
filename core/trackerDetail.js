@@ -1,5 +1,6 @@
 import React from 'react';
 import { Text, View, ScrollView, Pressable, Alert, TextInput } from 'react-native';
+import * as Notifications from 'expo-notifications';
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import TrackerChart from "./trackerChart";
 import { formatDate } from "./utils";
@@ -26,7 +27,18 @@ function deleteTracker(id, navigation) {
                             trackers = JSON.parse(trackers).filter(tracker => (tracker.id !== id));
                             AsyncStorage.setItem('Trackers', JSON.stringify(trackers))
                                 .then(() => {
-                                    navigation.goBack();
+                                    AsyncStorage.getItem('Notifications')
+                                        .then(notifications => {
+                                            notifications = JSON.parse(notifications);
+                                            const scheduledNotificationId = notifications[id];
+                                            delete notifications[id];
+                                            if (!scheduledNotificationId) return;
+                                            Notifications.cancelScheduledNotificationAsync(scheduledNotificationId)
+                                                .then(() => {
+                                                    AsyncStorage.setItem('Notifications', JSON.stringify(notifications))
+                                                        .then(() => {navigation.goBack();})
+                                                }) // classic callback hell
+                                        })
                                 })
                         })
                 }
