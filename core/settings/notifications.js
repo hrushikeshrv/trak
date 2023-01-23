@@ -116,11 +116,10 @@ class NotificationsScreen extends React.Component {
         const notificationId = await Notifications.scheduleNotificationAsync({
             content: {
                 title: trackerName,
-                body: 'Enter a record for this tracker'
+                body: `Record your ${trackerName}`
             },
             trigger: trigger,
         })
-        // Update this.state.scheduledNotifications
         const notifs = this.state.scheduledNotifications;
         notifs[trackerId] = notificationId;
         this.setState({scheduledNotifications: notifs});
@@ -206,23 +205,9 @@ class NotificationsScreen extends React.Component {
                     </View>
                 </Modal>
                 <Text style={styles.heading}>Notifications</Text>
-                <Pressable
-                    onPress={async () => {
-                        await Notifications.scheduleNotificationAsync({
-                            content: {
-                                title: "TRAK Notification",
-                                body: "This is a notification",
-                                data: { data: 'data' }
-                            },
-                            trigger: {
-                                seconds: 1
-                            }
-                        })
-                    }}
-                >
-                </Pressable>
                 <ScrollView style={styles.screenContainer}>
                     {this.state.trackers.map(this.renderTrackerRow)}
+                    <Text style={{padding: 20}}></Text>
                 </ScrollView>
                 <Pressable
                     style={[styles.simpleButton, styles.ajc, styles.centeredRow]}
@@ -231,10 +216,11 @@ class NotificationsScreen extends React.Component {
                             .then(() => {
                                 Alert.alert('All notifications stopped');
                                 AsyncStorage.setItem('Notifications', '{}');
+                                this.setState({scheduledNotifications: {}});
                             })
                     }}
                 >
-                    <Text style={{ color: 'white' }}>Stop all notifications</Text>
+                    <Text style={{ color: 'white', fontWeight: 'bold' }}>Stop all notifications</Text>
                 </Pressable>
             </View>
         )
