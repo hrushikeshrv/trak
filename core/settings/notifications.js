@@ -22,8 +22,7 @@ class NotificationsScreen extends React.Component {
         trackers: [],
         activeTracker: null,
         notificationModalVisible: false,
-
-        days: '7',
+        notificationTimes: {},
         time: null,
         timePickerVisible: false,
     }
@@ -86,7 +85,7 @@ class NotificationsScreen extends React.Component {
                 <Text style={{ color: 'white' }}>
                     {
                         tracker.id in this.state.scheduledNotifications
-                            ? ''
+                            ? this.getNotificationTime(tracker.notification)
                             : 'No notification scheduled'
                     }
                 </Text>
@@ -94,12 +93,18 @@ class NotificationsScreen extends React.Component {
         )
     }
 
-    getNotificationTime = () => {
-        const time = this.state.time;
+    getNotificationTime = (time) => {
         if (!time) return 'time';
-        let hours = time.getHours();
+        let hours, minutes;
+        if (typeof time === 'object') {
+            hours = time.hour;
+            minutes = time.minute;
+        }
+        else {
+            hours = time.getHours();
+            minutes = time.getMinutes();
+        }
         if (hours < 10) hours = '0' + hours;
-        let minutes = time.getMinutes();
         if (minutes < 10) minutes = '0' + minutes;
         return `${hours}:${minutes}`;
     }
@@ -123,6 +128,13 @@ class NotificationsScreen extends React.Component {
         const notifs = this.state.scheduledNotifications;
         notifs[trackerId] = notificationId;
         this.setState({scheduledNotifications: notifs});
+        for (let t of this.state.trackers) {
+            if (t.id === trackerId) {
+                t.notification = {hour: hour, minute: minute};
+                break;
+            }
+        }
+        await AsyncStorage.setItem('Trackers', JSON.stringify(this.state.trackers));
         await AsyncStorage.setItem('Notifications', JSON.stringify(notifs));
     }
 
@@ -163,28 +175,18 @@ class NotificationsScreen extends React.Component {
                     <View style={styles.screenContainer}>
                         <Text style={styles.heading}>{this.state.activeTracker?.name}</Text>
                         <Text style={styles.marginTop}>Remind me to record my {this.state.activeTracker?.name.toLowerCase()}</Text>
-                        <View style={[styles.centeredRow, styles.marginTopDouble, styles.ajc]}>
-                            <Text style={{ marginRight: 10, marginBottom: 15 }}>Every</Text>
-                            <TextInput
-                                style={[styles.button, {marginRight: 10, textAlign: 'center', fontSize: 18, fontFamily: 'monospace'}]}
-                                value={this.state.days}
-                                onChangeText={text => this.setState({days: text})}
-                                keyboardType='numeric'
-                            ></TextInput>
-                            <Text style={{marginBottom: 15}}>days</Text>
-                        </View>
                         <Pressable
                             style={[styles.centeredRow, styles.marginTop]}
                             onPress={this.toggleTimePicker}
                         >
-                            <Text style={{ marginBottom: 15 }}>at </Text>
-                            <Text style={[styles.button, {marginRight: 10, textAlign: 'center', fontSize: 18, fontFamily: 'monospace'}]}>{this.getNotificationTime()}</Text>
+                            <Text style={{ marginBottom: 15 }}>Everyday at </Text>
+                            <Text style={[styles.button, {marginRight: 10, textAlign: 'center', fontSize: 18, fontFamily: 'monospace'}]}>{this.getNotificationTime(this.state.time)}</Text>
                         </Pressable>
                         <Pressable
                             style={[styles.simpleButton, styles.marginTop]}
                             onPress={() => {
                                 this.setState({ activeTracker: null });
-                                if (!this.state.time || !this.state.days) {
+                                if (!this.state.time) {
                                     this.toggleNotificationModal();
                                     return;
                                 }
@@ -193,7 +195,6 @@ class NotificationsScreen extends React.Component {
                                     this.state.activeTracker.name,
                                     parseInt(this.state.time.getHours()),
                                     parseInt(this.state.time.getMinutes()),
-                                    parseInt(this.state.days)
                                 )
                                     .then(() => {
                                         this.toggleNotificationModal();
