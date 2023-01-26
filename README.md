@@ -5,8 +5,8 @@ A React Native app to record and visualize progress.
 - Add reminders to remind you to add records every day
 - See a graphical visualization of your progress
 
-![image](./assets/screen1.jpg)
-![image](./assets/screen2.jpg)
-![image](./assets/screen3.jpg)
-![image](./assets/screen4.jpg)
-![image](./assets/screen5.jpg)
+<img src="assets/screen1.jpg" width="250" alt="Screen 1">
+<img src="assets/screen2.jpg" width="250" alt="Screen 2">
+<img src="assets/screen3.jpg" width="250" alt="Screen 3">
+<img src="assets/screen4.jpg" width="250" alt="Screen 4">
+<img src="assets/screen5.jpg" width="250" alt="Screen 5">
