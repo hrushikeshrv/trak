@@ -36,6 +36,7 @@ class TrackerList extends React.Component {
 
     renderTrackerTile = (item) => {
         const { navigation } = this.props;
+        if (!item.name.toUpperCase().includes(this.state.searchTerm.toUpperCase())) return null;
         return (
             <Pressable
                 onPress={() => {navigation.navigate('DetailTracker', {tracker: item})}}
