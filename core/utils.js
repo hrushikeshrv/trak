@@ -2,6 +2,7 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import * as FileSystem from 'expo-file-system';
 
 export const formatDate = date => {
+    if (!date) return '';
     if (typeof date === 'string') return date;
     const words = date.toString().split(' ');
     let time = words[4].split(':');
