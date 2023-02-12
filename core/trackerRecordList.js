@@ -4,12 +4,15 @@ import DateTimePicker from "react-native-modal-datetime-picker";
 
 import styles from './styles'
 import {formatDate} from "./utils";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 class TrackerRecordList extends React.Component {
     state = {
         editRecordModalVisible: false,
         editingDate: null,
         editingRecord: null,
+        newDate: null,
+        newRecord: null,
         dateTimePickerVisible: false,
     }
 
@@ -49,8 +52,14 @@ class TrackerRecordList extends React.Component {
                     style={[styles.row, styles.jcsb, styles.recordRow]}
                     onPress={() => {
                         console.log('Pressed');
-                        this.setState({ editingDate: item[0], editingRecord: item[1] }, () => {
+                        this.setState({
+                            editingDate: new Date(item[0]),
+                            editingRecord: item[1],
+                            newDate: new Date(item[0]),
+                            newRecord: item[1],
+                        }, () => {
                             console.log(this.state.editingRecord);
+                            console.log(this.state.editingDate);
                             this.toggleEditRecordModal();
                         })
                     }}
@@ -60,6 +69,28 @@ class TrackerRecordList extends React.Component {
                 </Pressable>
             </View>
         )
+    }
+
+    replaceRecord = async (oldRecord, oldDate, newRecord, newDate) => {
+        const trackers = JSON.parse(await AsyncStorage.getItem('Trackers'));
+        for (let tracker of trackers) {
+            if (tracker.id === this.state.tracker.id) {
+                console.log(tracker.records.y[0])
+                for (let i = 0; i < tracker.records.x.length; i++) {
+                    if (tracker.records.x[i].toString() === oldDate.toISOString()
+                        && tracker.records.y[i].toString() === oldRecord.toString()) {
+                        console.log('Found record to replace', tracker.records.x[i], tracker.records.y[i]);
+                        tracker.records.x.splice(i, 1, newDate);
+                        tracker.records.y.splice(i, 1, newRecord);
+                        break;
+                    }
+                }
+                console.log(tracker.records.y[0]);
+                break;
+            }
+        }
+
+        await AsyncStorage.setItem('Trackers', JSON.stringify(trackers));
     }
 
     render() {
@@ -76,7 +107,10 @@ class TrackerRecordList extends React.Component {
                         <Text style={[styles.marginBottom, {fontSize: 18, fontWeight: 'bold'}]}>Record:</Text>
                         <TextInput
                             keyboardType="numeric"
-                            value={this.state.editingRecord}
+                            value={this.state.newRecord?.toString()}
+                            onChangeText={text => {
+                                this.setState({ newRecord: text })
+                            }}
                             style={styles.textInput}
                         ></TextInput>
 
@@ -88,7 +122,7 @@ class TrackerRecordList extends React.Component {
                             <Text>{formatDate(this.state.editingDate)}</Text>
                         </Pressable>
                         <DateTimePicker
-                            onConfirm={() => {}}
+                            onConfirm={date => {this.setState({ newDate: date })}}
                             onCancel={this.toggleDateTimePickerVisible}
                             isVisible={this.state.dateTimePickerVisible}
                             mode='datetime'
@@ -96,8 +130,10 @@ class TrackerRecordList extends React.Component {
                         <Pressable
                             style={[styles.simpleButton, styles.marginTop]}
                             onPress={() => {
-                                this.setState({ editingDate: null, editingRecord: null })
-                                this.toggleEditRecordModal()
+                                this.setState({ editingDate: null, editingRecord: null, newDate: null, newRecord: null })
+                                this.replaceRecord(this.state.editingRecord, this.state.editingDate, this.state.newRecord, this.state.newDate);
+                                this.toggleEditRecordModal();
+                                this.forceUpdate();
                             }}
                         >
                             <Text style={{ color: 'white', textAlign: 'center' }}>Done</Text>
