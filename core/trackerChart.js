@@ -9,7 +9,7 @@ import {
     VictoryVoronoiContainer,
     VictoryLabel
 } from "victory-native";
-import {transformData, formatDate, getRecordVariance, getRegressionLine, getRecordDelta} from "./utils";
+import {formatDate, getRecordVariance, getRegressionLine, getRecordDelta} from "./utils";
 import styles from "./styles";
 import {Text, View} from "react-native";
 import Ionicons from "@expo/vector-icons/Ionicons";
@@ -25,7 +25,7 @@ export default class TrackerChart extends React.Component {
     }
 
     componentDidMount() {
-        const data = transformData(this.props.tracker.records);
+        const data = this.props.tracker.records;
         const variance = getRecordVariance(this.props.tracker.records);
         const [constant, slope] = getRegressionLine(this.props.tracker.records);
         const delta = getRecordDelta(this.props.tracker.records);
@@ -74,7 +74,7 @@ export default class TrackerChart extends React.Component {
                     containerComponent={
                         <VictoryVoronoiContainer
                             voronoiDimension="x"
-                            labels={ ({ datum }) => `${datum.y}\n${formatDate(new Date(datum.date))}` }
+                            labels={ ({ datum }) => `${datum.y}\n${formatDate(new Date(datum.x))}` }
                             labelComponent={
                                 <VictoryTooltip
                                     constrainToVisibleArea
@@ -96,7 +96,7 @@ export default class TrackerChart extends React.Component {
                     </VictoryLine>
                     <VictoryAxis dependentAxis></VictoryAxis>
                     <VictoryAxis
-                        tickValues={this.props.tracker.records.x.sort()}
+                        tickValues={this.props.tracker.records.sort()}
                         tickCount={4}
                         fixLabelOverlap
                         tickFormat={t => (getTickFormat(t))}

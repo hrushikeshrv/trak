@@ -30,13 +30,14 @@ function deleteTracker(id, navigation) {
                                     AsyncStorage.getItem('Notifications')
                                         .then(notifications => {
                                             notifications = JSON.parse(notifications);
+                                            if (!notifications) return;
                                             const scheduledNotificationId = notifications[id];
                                             delete notifications[id];
                                             if (!scheduledNotificationId) return;
                                             Notifications.cancelScheduledNotificationAsync(scheduledNotificationId)
                                                 .then(() => {
                                                     AsyncStorage.setItem('Notifications', JSON.stringify(notifications))
-                                                        .then(() => {navigation.goBack();})
+                                                        .then(() => {navigation.navigate('TrackerList');})
                                                 }) // classic callback hell
                                         })
                                 })

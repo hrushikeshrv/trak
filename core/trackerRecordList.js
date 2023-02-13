@@ -17,10 +17,15 @@ class TrackerRecordList extends React.Component {
     }
 
     componentDidMount() {
-        const { tracker } = this.props.route.params;
+        this.updateData();
+    }
+
+    updateData = (tracker=null) => {
+        if (tracker === null)
+            tracker = this.props.route.params.tracker;
         const data = [];
-        for (let i = 0; i < tracker.records.x.length; i++) {
-            data.push([tracker.records.x[i], tracker.records.y[i], i]);
+        for (let i = 0; i < tracker.records.length; i++) {
+            data.push([tracker.records[i].x, tracker.records[i].y, i]);
         }
         data.sort((a, b) => {
             const d1 = new Date(a[0]);
@@ -75,17 +80,14 @@ class TrackerRecordList extends React.Component {
         const trackers = JSON.parse(await AsyncStorage.getItem('Trackers'));
         for (let tracker of trackers) {
             if (tracker.id === this.state.tracker.id) {
-                console.log(tracker.records.y[0])
-                for (let i = 0; i < tracker.records.x.length; i++) {
-                    if (tracker.records.x[i].toString() === oldDate.toISOString()
-                        && tracker.records.y[i].toString() === oldRecord.toString()) {
-                        console.log('Found record to replace', tracker.records.x[i], tracker.records.y[i]);
-                        tracker.records.x.splice(i, 1, newDate);
-                        tracker.records.y.splice(i, 1, newRecord);
+                for (let i = 0; i < tracker.records.length; i++) {
+                    if (tracker.records[i].x.toString() === oldDate.toISOString()
+                        && tracker.records[i].y.toString() === oldRecord.toString()) {
+                        tracker.records[i].x = newDate;
+                        tracker.records[i].y = parseFloat(newRecord);
                         break;
                     }
                 }
-                console.log(tracker.records.y[0]);
                 break;
             }
         }
@@ -130,10 +132,22 @@ class TrackerRecordList extends React.Component {
                         <Pressable
                             style={[styles.simpleButton, styles.marginTop]}
                             onPress={() => {
-                                this.setState({ editingDate: null, editingRecord: null, newDate: null, newRecord: null })
+                                if (!this.state.newDate || !this.state.newRecord) return;
                                 this.replaceRecord(this.state.editingRecord, this.state.editingDate, this.state.newRecord, this.state.newDate);
                                 this.toggleEditRecordModal();
-                                this.forceUpdate();
+                                this.setState({ editingDate: null, editingRecord: null, newDate: null, newRecord: null });
+                                console.log('Updating data')
+                                AsyncStorage.getItem('Trackers')
+                                    .then(trackers => {
+                                        trackers = JSON.parse(trackers);
+                                        for (let tracker of trackers) {
+                                            if (tracker.id === this.state.tracker.id) {
+                                                this.setState({tracker});
+                                                this.updateData(tracker);
+                                                break;
+                                            }
+                                        }
+                                    })
                             }}
                         >
                             <Text style={{ color: 'white', textAlign: 'center' }}>Done</Text>

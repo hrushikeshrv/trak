@@ -39,8 +39,7 @@ class AddRecord extends React.Component {
             const reading = this.state.readings[i];
             for (let j = 0; j < trackers.length; j++) {
                 if (trackers[j].id === reading.id) {
-                    trackers[j].records.x.push(this.state.date);
-                    trackers[j].records.y.push(reading.value);
+                    trackers[j].records.push({x: this.state.date, y: reading.value})
                 }
             }
         }
