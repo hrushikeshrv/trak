@@ -8,6 +8,14 @@ import { formatDate } from "./utils";
 import styles from './styles'
 import Ionicons from "@expo/vector-icons/Ionicons";
 import DateTimePicker from "react-native-modal-datetime-picker";
+import {useFocusEffect} from "@react-navigation/native";
+
+function UpdateTrackerDetail({ onUpdate }) {
+    useFocusEffect(React.useCallback(() => {
+        onUpdate();
+    }, []));
+    return null;
+}
 
 function deleteTracker(id, navigation) {
     Alert.alert(
@@ -52,6 +60,7 @@ class TrackerDetail extends React.Component{
         newReading: '',
         datePickerVisible: false,
         newDate: new Date(),
+        tracker: null,
     }
 
     saveRecord = () => {
@@ -85,15 +94,28 @@ class TrackerDetail extends React.Component{
             })
     }
 
+    updateTracker = () => {
+        AsyncStorage.getItem('Trackers')
+            .then(trackers => {
+                trackers = JSON.parse(trackers);
+                const id = this.props.route.params.tracker.id;
+                for (let tracker of trackers) {
+                    if (tracker.id === id) this.setState({ tracker });
+                }
+            })
+        return null;
+    }
+
     toggleDatePicker = () => {
         this.setState(prevState => ({datePickerVisible: !prevState.datePickerVisible}))
     }
 
     render() {
-        const { tracker } = this.props.route.params;
+        const tracker = this.state.tracker || this.props.route.params.tracker;
         const navigation = this.props.navigation;
         return (
             <ScrollView style={styles.screenContainer}>
+                <UpdateTrackerDetail onUpdate={this.updateTracker}></UpdateTrackerDetail>
                 <DateTimePicker
                     isVisible={this.state.datePickerVisible}
                     mode="datetime"
@@ -104,7 +126,7 @@ class TrackerDetail extends React.Component{
                     onCancel={this.toggleDatePicker}
                 ></DateTimePicker>
                 <View style={{alignItems: 'flex-start', flexDirection: 'row', flexWrap: 'wrap'}}>
-                    <Text style={styles.heading}>{tracker.name}</Text>
+                    <Text style={styles.heading}>{tracker?.name}</Text>
                 </View>
                 <TrackerChart tracker={tracker}></TrackerChart>
                 <View style={[styles.marginTop, styles.newRecordFieldset]}>

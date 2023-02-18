@@ -17,7 +17,11 @@ class TrackerRecordList extends React.Component {
     }
 
     componentDidMount() {
-        const { tracker } = this.props.route.params;
+        this.updateData();
+    }
+
+    updateData = (tracker=null) => {
+        if (!tracker) tracker = this.props.route.params.tracker;
         const data = [];
         for (let i = 0; i < tracker.records.x.length; i++) {
             data.push([tracker.records.x[i], tracker.records.y[i], i]);
@@ -51,15 +55,12 @@ class TrackerRecordList extends React.Component {
                     key={item[2]}
                     style={[styles.row, styles.jcsb, styles.recordRow]}
                     onPress={() => {
-                        console.log('Pressed');
                         this.setState({
                             editingDate: new Date(item[0]),
                             editingRecord: item[1],
                             newDate: new Date(item[0]),
                             newRecord: item[1],
                         }, () => {
-                            console.log(this.state.editingRecord);
-                            console.log(this.state.editingDate);
                             this.toggleEditRecordModal();
                         })
                     }}
@@ -75,21 +76,19 @@ class TrackerRecordList extends React.Component {
         const trackers = JSON.parse(await AsyncStorage.getItem('Trackers'));
         for (let tracker of trackers) {
             if (tracker.id === this.state.tracker.id) {
-                console.log(tracker.records.y[0])
                 for (let i = 0; i < tracker.records.x.length; i++) {
                     if (tracker.records.x[i].toString() === oldDate.toISOString()
                         && tracker.records.y[i].toString() === oldRecord.toString()) {
                         console.log('Found record to replace', tracker.records.x[i], tracker.records.y[i]);
                         tracker.records.x.splice(i, 1, newDate);
-                        tracker.records.y.splice(i, 1, newRecord);
+                        tracker.records.y.splice(i, 1, parseFloat(newRecord));
+                        this.updateData(tracker);
                         break;
                     }
                 }
-                console.log(tracker.records.y[0]);
                 break;
             }
         }
-
         await AsyncStorage.setItem('Trackers', JSON.stringify(trackers));
     }
 
@@ -138,6 +137,9 @@ class TrackerRecordList extends React.Component {
                         >
                             <Text style={{ color: 'white', textAlign: 'center' }}>Done</Text>
                         </Pressable>
+                        <Text style={[styles.marginTop, styles.warningContainer]}>
+                            You will see the updated records after you restart the application
+                        </Text>
                     </View>
                 </Modal>
                 <FlatList
