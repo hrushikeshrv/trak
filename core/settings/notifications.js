@@ -41,7 +41,6 @@ class NotificationsScreen extends React.Component {
         AsyncStorage.getItem('Trackers')
             .then(trackers => {
                 this.setState({ trackers: JSON.parse(trackers) })
-                console.log(this.state.scheduledNotifications);
             })
         this.notificationListener.current = Notifications.addNotificationReceivedListener(notification => {
             this.setState({notification})
@@ -51,24 +50,28 @@ class NotificationsScreen extends React.Component {
 
     getPermissionAsync = async () => {
         const {status: existingStatus} = await Notifications.getPermissionsAsync();
+        console.log(existingStatus);
         let finalStatus = existingStatus;
-        if (existingStatus !== 'granted') {
-            const { status } = await Notifications.requestPermissionsAsync();
-            finalStatus = status;
-        }
-        if (finalStatus !== 'granted') {
-            alert('Enable push notifications to use this feature');
-            await AsyncStorage.setItem('NotificationsToken', '');
-            return;
-        }
-        const token = (await Notifications.getExpoPushTokenAsync()).data;
-        await AsyncStorage.setItem('NotificationsToken', token);
-
+        let token;
         if (Platform.OS === 'Android') {
             await Notifications.setNotificationChannelAsync('default', {
                 name: 'default',
                 importance: Notifications.AndroidImportance.DEFAULT,
             })
+        }
+        if (existingStatus !== 'granted') {
+            console.log('Notification permissions not granted, asking for permission');
+            const { status } = await Notifications.requestPermissionsAsync();
+            console.log(finalStatus);
+            finalStatus = status;
+        }
+        if (finalStatus !== 'granted') {
+            Alert.alert('Enable push notifications to use this feature');
+            await AsyncStorage.setItem('NotificationsToken', '');
+        }
+        else {
+            token = (await Notifications.getExpoPushTokenAsync()).data;
+            await AsyncStorage.setItem('NotificationsToken', token);
         }
     }
 
